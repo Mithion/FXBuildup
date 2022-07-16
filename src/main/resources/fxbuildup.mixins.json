@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.fxbuildup.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "fxbuildup.refmap.json",
+  "plugin": "com.fxbuildup.mixins.MixinPlugin",
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
