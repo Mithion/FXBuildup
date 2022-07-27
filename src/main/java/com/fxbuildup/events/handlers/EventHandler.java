@@ -18,6 +18,7 @@
 
 package com.fxbuildup.events.handlers;
 
+import java.util.Map;
 import java.util.Optional;
 
 import com.fxbuildup.FXBuildup;
@@ -25,12 +26,19 @@ import com.fxbuildup.capabilities.buildup.EffectBuildupProvider;
 import com.fxbuildup.capabilities.stamina.Stamina;
 import com.fxbuildup.capabilities.stamina.StaminaProvider;
 import com.fxbuildup.config.EffectBuildupConfig;
+import com.fxbuildup.enchantments.Conditioning;
+import com.fxbuildup.enchantments.EnchantmentInit;
+import com.fxbuildup.enchantments.Endurance;
+import com.fxbuildup.enchantments.Resilience;
 import com.fxbuildup.network.dispatch.ServerMessageDispatcher;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent;
 import net.minecraftforge.event.entity.living.ShieldBlockEvent;
@@ -145,5 +153,35 @@ public class EventHandler {
 					ServerMessageDispatcher.sendStaminaFlash((ServerPlayer) p);
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public static void onLivingChangeGear(LivingEquipmentChangeEvent event) {
+		//look for the enchantments that this mod adds on the gear and call their application/removal functions where appropriate
+		//this intentionally doesn't check slots in case another mod changes what it can apply on.  Because why not.
+		
+		//removals first
+		Map<Enchantment, Integer> oldEnchants = EnchantmentHelper.getEnchantments(event.getFrom());
+		
+		if (event.getEntity() instanceof Player) {
+			if (oldEnchants.containsKey(EnchantmentInit.ENDURANCE.get()))
+				Endurance.remove((Player)event.getEntity());
+			if (oldEnchants.containsKey(EnchantmentInit.CONDITIONING.get()))
+				Conditioning.remove((Player)event.getEntity());
+		}
+		if (oldEnchants.containsKey(EnchantmentInit.RESILIENCE.get()))
+			Resilience.remove(event.getEntityLiving());
+		
+		//now additions
+		Map<Enchantment, Integer> newEnchants = EnchantmentHelper.getEnchantments(event.getTo());
+		
+		if (event.getEntity() instanceof Player) {
+			if (newEnchants.containsKey(EnchantmentInit.ENDURANCE.get()))
+				Endurance.apply((Player)event.getEntity(), newEnchants.get(EnchantmentInit.ENDURANCE.get()));
+			if (newEnchants.containsKey(EnchantmentInit.CONDITIONING.get()))
+				Conditioning.apply((Player)event.getEntity(), newEnchants.get(EnchantmentInit.CONDITIONING.get()));			
+		}
+		if (newEnchants.containsKey(EnchantmentInit.RESILIENCE.get()))
+			Resilience.apply(event.getEntityLiving(), newEnchants.get(EnchantmentInit.RESILIENCE.get()));
 	}
 }

@@ -34,6 +34,7 @@ public class EffectBuildupConfig {
 	//===============================================
 	
 	public static ForgeConfigSpec.DoubleValue BASELINE_RESISTANCE;
+	public static ForgeConfigSpec.DoubleValue ENCHANTMENT_RESISTANCE;
 	public static ForgeConfigSpec.DoubleValue DECAY_RATE;
 	public static ForgeConfigSpec.DoubleValue APPLICATION_RATE;
 	public static ForgeConfigSpec.IntValue MAXIMUM_AMPLIFIER;
@@ -58,7 +59,9 @@ public class EffectBuildupConfig {
 	
 	public static ForgeConfigSpec.BooleanValue STAMINA_ENABLED;
 	public static ForgeConfigSpec.DoubleValue STAMINA_BASELINE;	
+	public static ForgeConfigSpec.DoubleValue STAMINA_ENCHANT;
 	public static ForgeConfigSpec.DoubleValue STAMINA_REGEN_BASELINE;
+	public static ForgeConfigSpec.DoubleValue STAMINA_REGEN_ENCHANT;
 	public static ForgeConfigSpec.IntValue STAMINA_USE_REGEN_PAUSE;
 	public static ForgeConfigSpec.BooleanValue SPRINT_STAMINA;
 	public static ForgeConfigSpec.DoubleValue SPRINT_STAMINA_CONSUMPTION;
@@ -85,6 +88,7 @@ public class EffectBuildupConfig {
 		serverBuilder.comment("Effect Buildup // Effects Configuration").push("effects_config");
 		
 		BASELINE_RESISTANCE = serverBuilder.comment("how resistant is something to given effects by default?").defineInRange("baselineResistance", 1000, 0, Double.MAX_VALUE);
+		ENCHANTMENT_RESISTANCE = serverBuilder.comment("How much resistance does each resilience enchantment level give?  Based on vanilla gear, a player can have between 0 and 20 levels of the enchantment present.").defineInRange("enchantmentResilience", 25, 0, Double.MAX_VALUE);
 		DECAY_RATE = serverBuilder.comment("This is how fast effects decay by default, per second").defineInRange("decayRate", 25, 1, Double.MAX_VALUE);
 		APPLICATION_RATE = serverBuilder.comment("This is how fast effects are built up by default.  Magnitude * Duration(in ticks) * <this value> = amount added.").defineInRange("applicationRate", 0.5, 0, Double.MAX_VALUE);
 		MAXIMUM_AMPLIFIER = serverBuilder.comment("This is the maximum effect strength by default.").defineInRange("maximumAmplifier", 5, 0, 100);
@@ -114,7 +118,9 @@ public class EffectBuildupConfig {
 		
 		STAMINA_ENABLED = serverBuilder.comment("Should stamina functionality be enabled?").define("enableStamina", true);
 		STAMINA_BASELINE = serverBuilder.comment("How much stamina should players have by default?").defineInRange("baselineStamina", 100, 0, Double.MAX_VALUE);
+		STAMINA_ENCHANT = serverBuilder.comment("How much bonus stamina should one level of endurance give?  By vanilla, a player can have between 0 and 3 levels of this enchant.").defineInRange("enchantStamina", 50, 0, Double.MAX_VALUE);
 		STAMINA_REGEN_BASELINE = serverBuilder.comment("How much stamina should players regen by default per second?").defineInRange("staminaRegenRate", 20, 0, Double.MAX_VALUE);
+		STAMINA_REGEN_ENCHANT = serverBuilder.comment("How much additional stamina should players regen per second per level of conditioning?").defineInRange("staminaEnchantRegenRate", 5, 0, Double.MAX_VALUE);
 		STAMINA_USE_REGEN_PAUSE = serverBuilder.comment("How long, after dodging, should stamina not regenerate (in ticks)?").defineInRange("staminaRegenPause", 20, 0, Integer.MAX_VALUE);
 		
 		SPRINT_STAMINA = serverBuilder.comment("Should sprinting use and require stamina?").define("sprintStamina", true);

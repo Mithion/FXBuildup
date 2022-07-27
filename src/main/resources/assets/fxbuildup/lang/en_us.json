@@ -1,4 +1,13 @@
 {
 	"gui.fxbuildup.applied": "Applied",
-	"gui.fxbuildup.increased": "Increased"
+	"gui.fxbuildup.increased": "Increased",
+	
+	"enchantment.fxbuildup.endurance": "Endurance",
+	"enchantment.fxbuildup.endurance.desc": "Increases maximum stamina.",
+	
+	"enchantment.fxbuildup.conditioning": "Conditioning",
+	"enchantment.fxbuildup.conditioning.desc": "Increases stamina regen rate.",
+	
+	"enchantment.fxbuildup.resilience": "Resilience",
+	"enchantment.fxbuildup.resilience.desc": "Increases resistance to effects."
 }

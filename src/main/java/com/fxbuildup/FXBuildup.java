@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 
 import com.fxbuildup.attributes.AttributeInit;
 import com.fxbuildup.config.EffectBuildupConfig;
+import com.fxbuildup.enchantments.EnchantmentInit;
 import com.fxbuildup.events.handlers.ClientEventHandler;
 import com.fxbuildup.gui.GuiInit;
 import com.fxbuildup.proxy.ClientProxy;
@@ -54,6 +55,7 @@ public class FXBuildup
     	
     	AttributeInit.ATTRIBUTES.register(modEventBus);
     	RecipeInit.SERIALIZERS.register(modEventBus);
+    	EnchantmentInit.ENCHANTMENTS.register(modEventBus);
     	
     	DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
     		MinecraftForge.EVENT_BUS.register(ClientEventHandler.class);
