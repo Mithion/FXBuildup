@@ -35,6 +35,8 @@ import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.AreaEffectCloud;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -55,29 +57,49 @@ public class EventHandler {
 	@SubscribeEvent
 	public static void onLivingTick(LivingEvent.LivingUpdateEvent event) {
 		
+		LivingEntity living = event.getEntityLiving();
+		
 		//handle stamina
-		if (event.getEntity() instanceof Player && EffectBuildupConfig.STAMINA_ENABLED.get()) {
-			Player p = (Player)event.getEntityLiving();
-			//perform stamina regeneration if the capability exists
-			p.getCapability(StaminaProvider.CAP).ifPresent(stamina -> {
-				stamina.tick(p);
+		if (EffectBuildupConfig.STAMINA_ENABLED.get()) {
+			if (living instanceof Player) {
+				Player p = (Player)event.getEntityLiving();				
 				
-				//perform stamina drain if sprinting
-				if (p.isSprinting() && EffectBuildupConfig.SPRINT_STAMINA.get()) {
-					if (!stamina.consumeStamina(p, EffectBuildupConfig.SPRINT_STAMINA_CONSUMPTION.get() / 20f))
-						p.setSprinting(false);
+				//perform stamina regeneration if the capability exists
+				p.getCapability(StaminaProvider.CAP).ifPresent(stamina -> {
+					stamina.tick(p);
+					
+					//perform stamina drain if sprinting
+					if (stamina.isInCombat() && p.isSprinting() && EffectBuildupConfig.SPRINT_STAMINA.get()) {
+						if (!stamina.consumeStamina(p, EffectBuildupConfig.SPRINT_STAMINA_CONSUMPTION.get() / 20f))
+							p.setSprinting(false);
+					}
+				});			
+			}
+		
+			// If this living entity has a target, is an instace of Mob, and that target is a player, set the player in combat
+			if (living instanceof Mob && living.isAlive()) {
+				LivingEntity target = ((Mob)living).getTarget();
+				if (target != null && target instanceof Player && !living.isAlliedTo(target) && ((Mob)living).getSensing().hasLineOfSight(target)) {
+					//distance check
+					if (living.distanceTo(target) <= EffectBuildupConfig.IN_COMBAT_DISTANCE.get()) {
+						Stamina.setCombatTicks((Player)target);
+					}
 				}
-			});			
+			}
 		}
 		
 		//perform effect decay if the capability exists
-		event.getEntityLiving().getCapability(EffectBuildupProvider.CAP).ifPresent(buildup -> {
+		living.getCapability(EffectBuildupProvider.CAP).ifPresent(buildup -> {
 			buildup.tick(event.getEntityLiving());
-		});
+		});			
 	}
 	
 	@SubscribeEvent
 	public static void onPotionTryingToApply(PotionApplicableEvent event) {
+		
+		if (event.getEntityLiving().getPersistentData().contains("fxb_force"))
+			return;
+		
 		//handle effect buildup if the capability exists
 		event.getEntityLiving().getCapability(EffectBuildupProvider.CAP).ifPresent(buildup -> {
 			
@@ -111,6 +133,10 @@ public class EventHandler {
 			Player p = (Player)event.getEntityLiving();			
 			
 			p.getCapability(StaminaProvider.CAP).ifPresent(stamina -> {
+				
+				if (!stamina.isInCombat())
+					return;
+				
 				double stamCost = EffectBuildupConfig.JUMP_STAMINA_CONSUMPTION.get();
 				if (p.isSprinting()) {
 					stamCost *= EffectBuildupConfig.JUMP_SPRINT_STAMINA_MULTIPLIER.get();

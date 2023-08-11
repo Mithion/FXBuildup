@@ -19,41 +19,53 @@
 
 package com.fxbuildup.input;
 
+import com.fxbuildup.config.EffectBuildupClientConfig;
+import com.fxbuildup.config.KeybindInit;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class DoubleTapHandler {
-	private static final int DOUBLE_TAP_DELAY = 7;
 	
 	boolean wasPressed = false;
 	boolean wasReleased = false;
-	byte timer = 0;
+	int timer = 0;
 	
-	public boolean update(boolean pressed) {
+	public boolean update(boolean movementKeyPressed) {
 		if (timer > 0)
 			timer--;
 		
-		
-		if (!wasPressed && pressed) {
+		if (KeybindInit.dodge.isUnbound()) {		
+			if (!wasPressed && movementKeyPressed) {
+				if (timer == 0) {
+					timer = EffectBuildupClientConfig.DOUBLE_TAP_SENSITIVITY.get();
+				}else if (wasReleased) {
+					wasReleased = false;
+					wasPressed = false;
+					timer = 0;
+					return true;
+				}
+			}
+			
+			if (wasPressed && !movementKeyPressed) {
+				wasReleased = true;
+			}		
 			if (timer == 0) {
-				timer = DOUBLE_TAP_DELAY;
-			}else if (wasReleased) {
 				wasReleased = false;
-				wasPressed = false;
-				timer = 0;
+			}
+			
+			wasPressed = movementKeyPressed;
+			
+			
+		}else {
+			if (KeybindInit.dodge.isDown() && !wasPressed && movementKeyPressed) {
+				wasPressed = true;
 				return true;
+			}else {
+				wasPressed = false;
 			}
 		}
-		
-		if (wasPressed && !pressed) {
-			wasReleased = true;
-		}		
-		if (timer == 0) {
-			wasReleased = false;
-		}
-		
-		wasPressed = pressed;
 		
 		return false;
 	}

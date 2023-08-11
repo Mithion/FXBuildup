@@ -21,7 +21,9 @@ package com.fxbuildup;
 import org.slf4j.Logger;
 
 import com.fxbuildup.attributes.AttributeInit;
+import com.fxbuildup.config.EffectBuildupClientConfig;
 import com.fxbuildup.config.EffectBuildupConfig;
+import com.fxbuildup.config.KeybindInit;
 import com.fxbuildup.enchantments.EnchantmentInit;
 import com.fxbuildup.events.handlers.ClientEventHandler;
 import com.fxbuildup.gui.GuiInit;
@@ -52,6 +54,7 @@ public class FXBuildup
     public FXBuildup(){
     	//load configs
     	ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, EffectBuildupConfig.SERVERCONFIG, "fx-buildup.toml");
+    	ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, EffectBuildupClientConfig.CLIENT_SPEC);
     	
     	AttributeInit.ATTRIBUTES.register(modEventBus);
     	RecipeInit.SERIALIZERS.register(modEventBus);
@@ -60,6 +63,7 @@ public class FXBuildup
     	DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
     		MinecraftForge.EVENT_BUS.register(ClientEventHandler.class);
     		modEventBus.register(GuiInit.class);
+    		modEventBus.register(KeybindInit.class);
     		proxy = new ClientProxy();
     	});
     	

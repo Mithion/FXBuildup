@@ -25,7 +25,7 @@ import java.util.Map.Entry;
 import com.fxbuildup.attributes.AttributeInit;
 import com.fxbuildup.capabilities.buildup.EffectBuildup;
 import com.fxbuildup.capabilities.buildup.EffectBuildupProvider;
-import com.fxbuildup.capabilities.stamina.Stamina;
+import com.fxbuildup.capabilities.stamina.StaminaProvider;
 import com.fxbuildup.config.EffectBuildupConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -87,8 +87,12 @@ public class Hud extends GuiComponent {
 	        
 	        Minecraft mc = Minecraft.getInstance();
 	        
-	        if (EffectBuildupConfig.STAMINA_ENABLED.get() && !mc.player.isCreative() && !mc.player.isSpectator())
-	        	instance.renderStamina(mStack, screenWidth, screenHeight, partialTicks, Stamina.getAmount(mc.player), mc.player.getAttributeValue(AttributeInit.MAX_STAMINA.get()));
+	        if (EffectBuildupConfig.STAMINA_ENABLED.get() && !mc.player.isCreative() && !mc.player.isSpectator()) {
+	        	mc.player.getCapability(StaminaProvider.CAP).ifPresent(stamina -> {
+	        		instance.renderStamina(mStack, screenWidth, screenHeight, partialTicks, stamina.getAmount(), mc.player.getAttributeValue(AttributeInit.MAX_STAMINA.get()), stamina.isInCombat());
+	        	});
+	        	
+	        }
 	        
 	        mc.player.getCapability(EffectBuildupProvider.CAP).ifPresent(buildup -> {
 	        	instance.renderBuildup(mStack, buildup, mc.font, screenWidth, screenHeight, partialTicks);
@@ -139,7 +143,7 @@ public class Hud extends GuiComponent {
 		}
 	}
 	
-	private void renderStamina(PoseStack matrixStack, int screenWidth, int screenHeight, float partialTicks, double stamina, double maxStamina) {
+	private void renderStamina(PoseStack matrixStack, int screenWidth, int screenHeight, float partialTicks, double stamina, double maxStamina, boolean isInCombat) {
 		int x = screenWidth / 2 + 10;
 		int y = screenHeight - 47;
 		
@@ -154,6 +158,11 @@ public class Hud extends GuiComponent {
 		}
 		
 		renderEffectBar(matrixStack, x, y, 80, 5, stamina / maxStamina, color, true);
+		
+		if (isInCombat) {
+			RenderSystem.setShaderTexture(0, GuiTextures.IN_COBMAT);
+			blit(matrixStack, x + 74, y - 3, 12, 12, 0, 0, 16, 16, 16, 16);
+		}
 	}
 	
 	private void renderToast(PoseStack matrixStack, Font font, int screenWidth, int screenHeight, float partialTicks) {

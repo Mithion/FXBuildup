@@ -55,7 +55,7 @@ public class ClientEventHandler {
 		}
 		
 		if (EffectBuildupConfig.DODGING_ENABLED.get() && !mc.player.isCrouching()) {
-			double stamCost = EffectBuildupConfig.DODGE_STAMINA_COST.get();
+			double stamCost = EffectBuildupConfig.DODGE_STAMINA_COST.get();			
 			
 			if (left.update(event.getInput().left)) {				
 				if (Stamina.getAmount(mc.player) >= stamCost)

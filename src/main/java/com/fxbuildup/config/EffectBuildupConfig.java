@@ -73,6 +73,8 @@ public class EffectBuildupConfig {
 	public static ForgeConfigSpec.IntValue BLOCK_STAMINA_SHIELD_COOLDOWN;
 	public static ForgeConfigSpec.DoubleValue MINIMUM_FOOD_FACTOR;
 	public static ForgeConfigSpec.DoubleValue ATTACK_STAMINA_COST;
+	public static ForgeConfigSpec.IntValue IN_COMBAT_TICKS;
+	public static ForgeConfigSpec.DoubleValue IN_COMBAT_DISTANCE;
 	
 	static {
 		ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -137,6 +139,9 @@ public class EffectBuildupConfig {
 		
 		MINIMUM_FOOD_FACTOR = serverBuilder.comment("With low food, stamina regen slows.  What is the lowest rate it should go (as a percent)?").defineInRange("lowestFoodMultiplier", 0.1d, 0.0d, 1.0d);
 		ATTACK_STAMINA_COST = serverBuilder.comment("How much stamina should attacking (using left click) consume?  Set to zero to disable.").defineInRange("attackStaminaCost", 10, 0, Double.MAX_VALUE);
+		
+		IN_COMBAT_TICKS = serverBuilder.comment("The number of ticks to wait with nothing targeting a player to consider that player no longer in combat").defineInRange("combatTimeout", 200, 1, Integer.MAX_VALUE);		
+		IN_COMBAT_DISTANCE = serverBuilder.comment("The distance away from a target at which point it no longer sets the player as being in combat even if still targeting that player").defineInRange("combatDistance", 80, 1, Double.MAX_VALUE);
 		
 		serverBuilder.pop();
 	}

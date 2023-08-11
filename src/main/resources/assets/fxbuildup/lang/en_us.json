@@ -9,5 +9,8 @@
 	"enchantment.fxbuildup.conditioning.desc": "Increases stamina regen rate.",
 	
 	"enchantment.fxbuildup.resilience": "Resilience",
-	"enchantment.fxbuildup.resilience.desc": "Increases resistance to effects."
+	"enchantment.fxbuildup.resilience.desc": "Increases resistance to effects.",
+	
+	"key.categories.fxbuildup": "FXBuildup Key Bindings",
+	"key.dodge": "Dodge"
 }

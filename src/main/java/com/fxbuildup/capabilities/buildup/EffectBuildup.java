@@ -157,8 +157,16 @@ public class EffectBuildup extends SyncedCapability {
 	 * @return The resistance to the effect.
 	 */
 	public double getResistanceTo(LivingEntity target, MobEffect effect) {
-		double current = target.getAttributeValue(AttributeInit.RESISTANCE.get());
-		double baseline = target.getAttributeBaseValue(AttributeInit.RESISTANCE.get());
+		var attr = target.getAttribute(AttributeInit.RESISTANCE.get());
+		if (attr == null)
+			return 0;
+		
+		double configuredBaseline = EffectBuildupConfig.BASELINE_RESISTANCE.get();
+		if (attr.getBaseValue() != configuredBaseline)
+			attr.setBaseValue(configuredBaseline);
+		
+		double current = attr.getValue();
+		double baseline = attr.getValue();
 		double modifier = current - baseline;
 		
 		//check to see if there is a custom recipe for this effect for my entity

@@ -4,14 +4,13 @@ license="All rights reserved"
 #issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/"
 [[mods]]
 modId="fxbuildup"
-version="${file.jarVersion}"
-displayName="Effects Buildup"
-logoFile="examplemod.png"
+version="0.6"
+displayName="FXBuildup"
 credits="Thanks to FromSoft for the inspiration."
 authors="Mithion"
 description='''
 This is a highly configurable mod that adds soulsbourne-esque status buildup to Minecraft.
-It also adds dodging.
+It also adds dodging and stamina.
 '''
 
 [[dependencies.fxbuildup]]
@@ -24,6 +23,6 @@ It also adds dodging.
 [[dependencies.fxbuildup]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18.2,1.19)"
+    versionRange="[1.18.2)"
     ordering="NONE"
     side="BOTH"

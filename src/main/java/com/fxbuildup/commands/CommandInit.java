@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Mithion
+ * Copyright 2023 Mithion
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
  * and associated documentation files (the "Software"), to deal in the Software without restriction, 
  * including without limitation the rights to use, copy, modify, merge, publish, distribute, 
@@ -17,14 +17,20 @@
  */
 
 
-package com.fxbuildup.gui;
+package com.fxbuildup.commands;
 
 import com.fxbuildup.FXBuildup;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
-public class GuiTextures {
-	public static final ResourceLocation BOLT_BACKGROUND = new ResourceLocation(FXBuildup.MODID, "textures/gui/bolt_bg.png");
-	public static final ResourceLocation BOLT_FOREGROUND = new ResourceLocation(FXBuildup.MODID, "textures/gui/bolt_fg.png");
-	public static final ResourceLocation IN_COBMAT = new ResourceLocation(FXBuildup.MODID, "textures/gui/in_combat.png");
+@Mod.EventBusSubscriber(modid = FXBuildup.MODID, bus = Bus.FORGE)
+public class CommandInit {
+
+	@SubscribeEvent	
+    public static void onCommandsRegister(RegisterCommandsEvent event) {		
+    	CommandFXBEffect.register(event.getDispatcher());
+    }
 }

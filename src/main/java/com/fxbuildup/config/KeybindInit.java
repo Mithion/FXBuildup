@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Mithion
+ * Copyright 2023 Mithion
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
  * and associated documentation files (the "Software"), to deal in the Software without restriction, 
  * including without limitation the rights to use, copy, modify, merge, publish, distribute, 
@@ -17,14 +17,20 @@
  */
 
 
-package com.fxbuildup.gui;
+package com.fxbuildup.config;
 
-import com.fxbuildup.FXBuildup;
+import com.mojang.blaze3d.platform.InputConstants;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.KeyMapping;
+import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-public class GuiTextures {
-	public static final ResourceLocation BOLT_BACKGROUND = new ResourceLocation(FXBuildup.MODID, "textures/gui/bolt_bg.png");
-	public static final ResourceLocation BOLT_FOREGROUND = new ResourceLocation(FXBuildup.MODID, "textures/gui/bolt_fg.png");
-	public static final ResourceLocation IN_COBMAT = new ResourceLocation(FXBuildup.MODID, "textures/gui/in_combat.png");
+public class KeybindInit {
+	public static final KeyMapping dodge = new KeyMapping("key.dodge", net.minecraftforge.client.settings.KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, "key.categories.fxbuildup");
+	
+	@SubscribeEvent
+	public static void init(final FMLClientSetupEvent event) {
+		ClientRegistry.registerKeyBinding(dodge);		
+	}
 }

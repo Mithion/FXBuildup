@@ -24,19 +24,22 @@ import net.minecraft.network.FriendlyByteBuf;
 public class StaminaSync {
 	final double amount;
 	final int cooldown;
+	final int inCombatTicks;
 	
-	public StaminaSync(double amount, int cooldown) {
+	public StaminaSync(double amount, int cooldown, int inCombatTicks) {
 		this.amount = amount;
 		this.cooldown = cooldown;
+		this.inCombatTicks = inCombatTicks;
 	}
 	
 	public static void encode(final StaminaSync msg, FriendlyByteBuf buf) {
 		buf.writeDouble(msg.amount);
 		buf.writeInt(msg.cooldown);		
+		buf.writeInt(msg.inCombatTicks);
 	}
 	
 	public static StaminaSync decode(FriendlyByteBuf buf) {
-		return new StaminaSync(buf.readDouble(), buf.readInt());		
+		return new StaminaSync(buf.readDouble(), buf.readInt(), buf.readInt());		
 	}
 
 	public double getAmount() {
@@ -45,5 +48,9 @@ public class StaminaSync {
 	
 	public int getPauseCounter() {
 		return this.cooldown;
+	}
+	
+	public int getInCombatTicks() {
+		return this.inCombatTicks;
 	}
 }

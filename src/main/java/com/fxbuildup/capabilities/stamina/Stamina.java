@@ -39,7 +39,9 @@ import net.minecraftforge.common.util.LazyOptional;
 public class Stamina extends SyncedCapability{
 	double amount;
 	int pauseCounter;
+	int inCombatTicks = 0;
 	float lastAttackStrengthScale = 0;
+	int tickCount = 0;
 	
 	/**
 	 * Tick intended to be called each frame for every entity with this capability attached.
@@ -48,14 +50,42 @@ public class Stamina extends SyncedCapability{
 	public void tick(Player player) {
 		tickSync(player);		
 		
+		//are we in combat				
+		if (inCombatTicks > 0) {
+			inCombatTicks--;
+			//just left combat; sync
+			// also more frequent syncs when in combat
+			if (!player.level.isClientSide && (inCombatTicks == 0 || tickCount++ % 20 == 0)) {
+				setDirty(true);
+			}
+		}else {
+			tickCount = 0;
+		}
+		
 		//are we paused?
 		if (pauseCounter > 0) {
 			pauseCounter--;
 			return;
-		}		
+		}
 		
 		//handle regeneration
-		double maximum = player.getAttributeValue(AttributeInit.MAX_STAMINA.get());
+		var attr = player.getAttribute(AttributeInit.MAX_STAMINA.get());
+		var regen = player.getAttribute(AttributeInit.STAMINA_REGEN.get());
+		if (attr == null || regen == null)
+			return;
+		
+		double configuredAttrBaseline = EffectBuildupConfig.STAMINA_BASELINE.get();
+		double configuredRegenBaseline = EffectBuildupConfig.STAMINA_REGEN_BASELINE.get();
+		if (attr.getBaseValue() != configuredAttrBaseline) {
+			attr.setBaseValue(configuredAttrBaseline);
+		}
+		
+		if (regen.getBaseValue() != configuredRegenBaseline) {
+			regen.setBaseValue(configuredRegenBaseline);
+		}
+		
+		double maximum = attr.getValue();		
+		double regenVal = regen.getValue();
 		
 		if (player.isCreative() || player.isSpectator())
 			amount = maximum;		
@@ -64,7 +94,7 @@ public class Stamina extends SyncedCapability{
 		if (amount == maximum)
 			return;
 		
-		double regenRate = player.getAttributeValue(AttributeInit.STAMINA_REGEN.get()) / 20f;		
+		double regenRate = regenVal / 20f;		
 		
 		double foodPct = Mth.clamp(player.getFoodData().getFoodLevel() / 20f, EffectBuildupConfig.MINIMUM_FOOD_FACTOR.get(), 1f);
 		regenRate *= foodPct;
@@ -109,6 +139,53 @@ public class Stamina extends SyncedCapability{
 		this.pauseCounter = EffectBuildupConfig.STAMINA_USE_REGEN_PAUSE.get();
 		setDirty(false);
 		return true;
+	}
+	
+	/**
+	 * Are we in combat?
+	 */
+	public boolean isInCombat() {
+		return this.inCombatTicks > 0;
+	}
+	
+	/**
+	 * Instanced get amount
+	 */
+	public double getAmount() {
+		return this.amount;
+	}
+	
+	/**
+	 * Set the number of ticks to be considered "in combat" to an absolute value
+	 * @param ticks The number of ticks to be in combat for
+	 */
+	public void setCombatTicks(int ticks) {
+		//entering combat, sync
+		if (!this.isInCombat() && ticks > 0)
+			this.setDirty(true);
+		
+		
+		this.inCombatTicks = ticks;		
+	}
+	
+	/**
+	 * Convenience method to set the number of ticks to be considered "in combat" to an absolute value for the given player
+	 * @param player The player to set the combat ticks for
+	 * @param ticks The number of ticks to be in combat for
+	 */
+	public static void setCombatTicks(Player player, int ticks) {
+		player.getCapability(StaminaProvider.CAP).ifPresent(s -> {
+			s.setCombatTicks(ticks);
+		});
+	}
+	
+	/**
+	 * Convenience method to set the number of ticks to be considered "in combat" to an absolute value for the given player to the default value in the configs
+	 * @param player The player to set the combat ticks for
+	 * @param ticks The number of ticks to be in combat for
+	 */
+	public static void setCombatTicks(Player player) {
+		setCombatTicks(player, EffectBuildupConfig.IN_COMBAT_TICKS.get());
 	}
 	
 	/**
@@ -168,7 +245,7 @@ public class Stamina extends SyncedCapability{
 	 * Creates a packet for network sync
 	 */
 	public StaminaSync createPacket() {
-		return new StaminaSync(amount, pauseCounter);
+		return new StaminaSync(amount, pauseCounter, inCombatTicks);
 	}
 	
 	/**
@@ -177,5 +254,6 @@ public class Stamina extends SyncedCapability{
 	public void handlePacket(StaminaSync packet) {
 		this.amount = packet.getAmount();
 		this.pauseCounter = packet.getPauseCounter();
+		this.inCombatTicks = packet.getInCombatTicks();
 	}
 }
