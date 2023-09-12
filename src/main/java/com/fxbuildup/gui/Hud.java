@@ -37,14 +37,12 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.MobEffectTextureManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -80,10 +78,9 @@ public class Hud extends GuiComponent {
 	
 	/**
 	 * Register our main overlay with forge.
-	 */
-	static {
-		OverlayRegistry.registerOverlayTop("FX Buildup Statuses and Stamina", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
-	        gui.setupOverlayRenderState(true, false);
+	 */	
+	public static void registerOverlay(ForgeGui gui, PoseStack mStack, float partialTicks, int screenWidth, int screenHeight) {
+		 gui.setupOverlayRenderState(true, false);
 	        
 	        Minecraft mc = Minecraft.getInstance();
 	        
@@ -99,7 +96,6 @@ public class Hud extends GuiComponent {
 	        });
 	        	        
 	        instance.renderToast(mStack, mc.font, screenWidth, screenHeight, partialTicks);
-	    });	
 	}
 	
 	/**
@@ -108,9 +104,9 @@ public class Hud extends GuiComponent {
 	 * @param isNew Is this a new application of the effect or an increment (slightly changes wording)
 	 */
 	public static void showApplicationToast(String effectTranslation, boolean isNew) {
-		String translatedEffectName = new TranslatableComponent(effectTranslation).getString();
-		String translatedAction = new TranslatableComponent(isNew ? "gui.fxbuildup.applied" : "gui.fxbuildup.increased").getString();
-		instance.toastComponent = new TextComponent(String.format("%s %s", translatedEffectName, translatedAction));
+		String translatedEffectName = Component.translatable(effectTranslation).getString();
+		String translatedAction = Component.translatable(isNew ? "gui.fxbuildup.applied" : "gui.fxbuildup.increased").getString();
+		instance.toastComponent = Component.literal(String.format("%s %s", translatedEffectName, translatedAction));
 		
 		instance.fadeInCounter = 0; //fade in counts up for easier math
 		instance.waitCounter = TOAST_WAIT_TIME;
@@ -198,7 +194,9 @@ public class Hud extends GuiComponent {
 		MobEffectInstance dummyInstance = new MobEffectInstance(effect);
 		
 		MobEffectTextureManager mobeffecttexturemanager = Minecraft.getInstance().getMobEffectTextures();
-		net.minecraftforge.client.EffectRenderer renderer = net.minecraftforge.client.RenderProperties.getEffectRenderer(dummyInstance);
+		
+		 var renderer = net.minecraftforge.client.extensions.common.IClientMobEffectExtensions.of(dummyInstance);
+         if (!renderer.isVisibleInGui(dummyInstance)) return;
 		
 		RenderSystem.enableBlend();
 		RenderSystem.setShaderTexture(0, AbstractContainerScreen.INVENTORY_LOCATION);
@@ -208,10 +206,10 @@ public class Hud extends GuiComponent {
 		this.blit(matrixStack, x, y, 141, 166, 24, 24);
 		
 		TextureAtlasSprite textureatlassprite = mobeffecttexturemanager.get(effect);
+		Minecraft mc = Minecraft.getInstance();
+		renderer.renderGuiIcon(dummyInstance, mc.gui, matrixStack, x, y, this.getBlitOffset(), 1.0f);
 		
-		renderer.renderHUDEffect(dummyInstance,this, matrixStack, x, y, this.getBlitOffset(), 1.0f);
-		
-		RenderSystem.setShaderTexture(0, textureatlassprite.atlas().location());
+		RenderSystem.setShaderTexture(0, textureatlassprite.atlasLocation());
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0f);
         blit(matrixStack, x + 3, y + 3, this.getBlitOffset(), 18, 18, textureatlassprite);
 	}

@@ -20,11 +20,9 @@ package com.fxbuildup.recipes;
 
 import com.fxbuildup.FXBuildup;
 
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -37,8 +35,8 @@ import net.minecraftforge.registries.RegistryObject;
 public class RecipeInit {
 	public static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, FXBuildup.MODID);
 	
-	public static final RegistryObject<SimpleRecipeSerializer<StatusConfigRecipe>> STATUS_CONFIG_SERIALIZER = SERIALIZERS.register("status_config", () -> new StatusConfigRecipeSerializer(StatusConfigRecipe::new));
-	public static final RegistryObject<SimpleRecipeSerializer<EntityConfigRecipe>> ENTITY_CONFIG_SERIALIZER = SERIALIZERS.register("entity_config", () -> new EntityConfigRecipeSerializer(EntityConfigRecipe::new));
+	public static final RegistryObject<StatusConfigRecipeSerializer> STATUS_CONFIG_SERIALIZER = SERIALIZERS.register("status_config", StatusConfigRecipeSerializer::new);
+	public static final RegistryObject<EntityConfigRecipeSerializer> ENTITY_CONFIG_SERIALIZER = SERIALIZERS.register("entity_config", EntityConfigRecipeSerializer::new);
 	
 	public static RecipeType<StatusConfigRecipe> STATUS_CONFIG_TYPE;
 	public static RecipeType<EntityConfigRecipe> ENTITY_CONFIG_TYPE;
@@ -57,18 +55,21 @@ public class RecipeInit {
 		ResourceLocation status = new ResourceLocation(FXBuildup.MODID, "ritual-type");
 		ResourceLocation entity = new ResourceLocation(FXBuildup.MODID, "ritual-type");
 		
-		STATUS_CONFIG_TYPE = Registry.register(Registry.RECIPE_TYPE, status, new RecipeType<StatusConfigRecipe>() {
+		STATUS_CONFIG_TYPE =new RecipeType<StatusConfigRecipe>() {
 			@Override
 			public String toString() {
 				return status.toString();
 			}
-		});
+		}; 						
 		
-		ENTITY_CONFIG_TYPE = Registry.register(Registry.RECIPE_TYPE, entity, new RecipeType<EntityConfigRecipe>() {
+		ENTITY_CONFIG_TYPE =new RecipeType<EntityConfigRecipe>() {
 			@Override
 			public String toString() {
 				return entity.toString();
 			}
-		});
+		}; 
+				
+		ForgeRegistries.RECIPE_TYPES.register(status, STATUS_CONFIG_TYPE);
+		ForgeRegistries.RECIPE_TYPES.register(entity, ENTITY_CONFIG_TYPE);
 	}
 }

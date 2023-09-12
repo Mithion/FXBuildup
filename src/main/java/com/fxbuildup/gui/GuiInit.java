@@ -21,6 +21,7 @@ package com.fxbuildup.gui;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -28,6 +29,12 @@ public class GuiInit {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onClientSetupEvent(FMLClientSetupEvent event) {
-		Hud.instance = new Hud();
+		Hud.instance = new Hud();		
+	}
+	
+	public static void onRegisterOverlays(RegisterGuiOverlaysEvent event) {
+		event.registerAboveAll("FX Buildup Statuses and Stamina", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+			Hud.registerOverlay(gui, mStack, partialTicks, screenWidth, screenHeight);
+		});
 	}
 }

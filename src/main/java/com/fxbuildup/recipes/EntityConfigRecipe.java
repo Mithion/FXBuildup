@@ -30,10 +30,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Recipe allowing configuration of how effects affect a given mob.
@@ -49,7 +51,7 @@ public class EntityConfigRecipe extends CustomRecipe{
 	NonNullList<EffectWhitelist> individualEffects;
 	
 	public EntityConfigRecipe(ResourceLocation pId) {
-		super(pId);
+		super(pId, CraftingBookCategory.MISC);
 		
 		globalOptions = new EffectWhitelist();
 		immuneEffects = NonNullList.create();
@@ -60,7 +62,7 @@ public class EntityConfigRecipe extends CustomRecipe{
 	 * Is the entity for this recipe immune to the given effect (as per config; does not look at code settings)?
 	 */
 	public boolean isImmuneTo(MobEffect effect) {
-		return immuneEffects.contains(effect.getRegistryName());
+		return immuneEffects.contains(ForgeRegistries.MOB_EFFECTS.getKey(effect));
 	}
 	
 	/**
@@ -181,7 +183,7 @@ public class EntityConfigRecipe extends CustomRecipe{
 		public boolean matches(MobEffect effect) {
 			if (this.effectId == null) return false;
 			
-			return this.effectId.equals(effect.getRegistryName());
+			return this.effectId.equals(ForgeRegistries.MOB_EFFECTS.getKey(effect));
 		}
 		
 		/**

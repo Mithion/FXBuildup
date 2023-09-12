@@ -22,15 +22,14 @@ package com.fxbuildup.config;
 import com.mojang.blaze3d.platform.InputConstants;
 
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class KeybindInit {
 	public static final KeyMapping dodge = new KeyMapping("key.dodge", net.minecraftforge.client.settings.KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, "key.categories.fxbuildup");
 	
 	@SubscribeEvent
-	public static void init(final FMLClientSetupEvent event) {
-		ClientRegistry.registerKeyBinding(dodge);		
+	public static void init(final RegisterKeyMappingsEvent event) {
+		event.register(dodge);		
 	}
 }

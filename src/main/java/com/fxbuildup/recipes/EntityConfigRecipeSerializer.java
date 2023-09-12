@@ -19,21 +19,17 @@
 package com.fxbuildup.recipes;
 
 import java.util.HashMap;
-import java.util.function.Function;
 
 import com.google.gson.JsonObject;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 
-public class EntityConfigRecipeSerializer extends SimpleRecipeSerializer<EntityConfigRecipe> {
+public class EntityConfigRecipeSerializer implements RecipeSerializer<EntityConfigRecipe> {
 
 	public static HashMap<ResourceLocation, EntityConfigRecipe> ALL_RECIPES = new HashMap<ResourceLocation, EntityConfigRecipe>();
 	
-	public EntityConfigRecipeSerializer(Function<ResourceLocation, EntityConfigRecipe> pConstructor) {
-		super(pConstructor);
-	}
 
 	@Override
 	public final EntityConfigRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

@@ -24,7 +24,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.eventbus.api.Event;
 
 /**
- * Fired when an effect’s buildup is increased, can be canceled, and/or resultant value can be modified.
+ * Fired when an effectï¿½s buildup is increased, can be canceled, and/or resultant value can be modified.
  * This event is cancelable.
  * @author Mithion
  *

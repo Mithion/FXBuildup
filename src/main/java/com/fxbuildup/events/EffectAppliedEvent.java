@@ -24,7 +24,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.eventbus.api.Event;
 
 /**
- * Fired when an effect’s buildup is filled and it is about to be applied, can be canceled, and/or resultant values can be modified.
+ * Fired when an effectï¿½s buildup is filled and it is about to be applied, can be canceled, and/or resultant values can be modified.
  * This event is cancelable.
  * @author Mithion
  *

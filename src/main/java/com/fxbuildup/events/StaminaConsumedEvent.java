@@ -23,7 +23,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
 /**
- * Fired when a player’s stamina is to be consumed.  Can be canceled or resultant value modified.
+ * Fired when a playerï¿½s stamina is to be consumed.  Can be canceled or resultant value modified.
  * This event is cancelable.
  * @author Mithion
  *

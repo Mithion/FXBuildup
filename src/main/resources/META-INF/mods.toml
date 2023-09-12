@@ -4,7 +4,7 @@ license="All rights reserved"
 #issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/"
 [[mods]]
 modId="fxbuildup"
-version="0.6"
+version="0.71"
 displayName="FXBuildup"
 credits="Thanks to FromSoft for the inspiration."
 authors="Mithion"
@@ -16,13 +16,13 @@ It also adds dodging and stamina.
 [[dependencies.fxbuildup]]
     modId="forge"
     mandatory=true
-    versionRange="[40,)"
+    versionRange="[41,)"
     ordering="NONE"
     side="BOTH"
 	
 [[dependencies.fxbuildup]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18.2)"
+    versionRange="[1.19.2]"
     ordering="NONE"
     side="BOTH"

@@ -81,7 +81,7 @@ public class ClientEventHandler {
 	} 
 	
 	@SubscribeEvent
-	public static void onClickInput(InputEvent.ClickInputEvent event) {
+	public static void onClickInput(InputEvent.InteractionKeyMappingTriggered event) {
 		if (EffectBuildupConfig.STAMINA_ENABLED.get() && EffectBuildupConfig.ATTACK_STAMINA_COST.get() > 0) {
 			Minecraft mc = Minecraft.getInstance();
 			if (event.isAttack() && Stamina.getAmount(mc.player) < EffectBuildupConfig.ATTACK_STAMINA_COST.get()) {

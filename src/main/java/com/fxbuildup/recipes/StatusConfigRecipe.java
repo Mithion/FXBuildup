@@ -24,10 +24,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Recipe allowing customization of attributes for status buildup for a given effect.
@@ -45,7 +47,7 @@ public class StatusConfigRecipe extends CustomRecipe{
 	int maximumAmplifier;
 	
 	public StatusConfigRecipe(ResourceLocation pId) {
-		super(pId);
+		super(pId, CraftingBookCategory.MISC);
 		
 		buildupRate = EffectBuildupConfig.APPLICATION_RATE.get();
 		decayRate = EffectBuildupConfig.DECAY_RATE.get();
@@ -59,7 +61,7 @@ public class StatusConfigRecipe extends CustomRecipe{
 	 * Is this recipe for the given effect?
 	 */
 	public boolean isFor(MobEffect effect) {
-		return this.effectId.equals(effect.getRegistryName());
+		return this.effectId.equals(ForgeRegistries.MOB_EFFECTS.getKey(effect));
 	}
 	
 	/**

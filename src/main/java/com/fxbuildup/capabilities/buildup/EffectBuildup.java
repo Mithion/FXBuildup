@@ -41,6 +41,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Capability handler to control effect buildup.
@@ -116,7 +117,7 @@ public class EffectBuildup extends SyncedCapability {
 				}								
 			}
 			
-			buildup.put(inst.getEffect().getRegistryName(), new_buildup);
+			buildup.put(ForgeRegistries.MOB_EFFECTS.getKey(inst.getEffect()), new_buildup);
 			
 			setDirty(true);
 						
@@ -148,7 +149,7 @@ public class EffectBuildup extends SyncedCapability {
 	 * @return The buildup.  0 or higher.
 	 */
 	public double getBuildup(MobEffect effect) {
-		return buildup.getOrDefault(effect.getRegistryName(), 0d);
+		return buildup.getOrDefault(ForgeRegistries.MOB_EFFECTS.getKey(effect), 0d);
 	}
 	
 	/**
@@ -170,7 +171,7 @@ public class EffectBuildup extends SyncedCapability {
 		double modifier = current - baseline;
 		
 		//check to see if there is a custom recipe for this effect for my entity
-		EntityConfigRecipe entityConfig = EntityConfigRecipeSerializer.ALL_RECIPES.getOrDefault(effect.getRegistryName(), null);
+		EntityConfigRecipe entityConfig = EntityConfigRecipeSerializer.ALL_RECIPES.getOrDefault(ForgeRegistries.MOB_EFFECTS.getKey(effect), null);
 		if (entityConfig != null) {
 			return entityConfig.getConfigFor(effect).get().getResist() + modifier;
 		}
@@ -186,7 +187,7 @@ public class EffectBuildup extends SyncedCapability {
 	 */
 	public double getBuildupRate(MobEffect effect) {
 		//check to see if there is a custom config for this effect in general
-		StatusConfigRecipe statusConfig = StatusConfigRecipeSerializer.ALL_RECIPES.getOrDefault(effect.getRegistryName(), null);
+		StatusConfigRecipe statusConfig = StatusConfigRecipeSerializer.ALL_RECIPES.getOrDefault(ForgeRegistries.MOB_EFFECTS.getKey(effect), null);
 		if (statusConfig != null)
 			return statusConfig.getBuildup();
 		
@@ -216,7 +217,7 @@ public class EffectBuildup extends SyncedCapability {
 	 */
 	public int getConfiguredDuration(MobEffect effect, int passedDuration) {
 		//check to see if there is a custom config for this effect in general
-		StatusConfigRecipe statusConfig = StatusConfigRecipeSerializer.ALL_RECIPES.getOrDefault(effect.getRegistryName(), null);
+		StatusConfigRecipe statusConfig = StatusConfigRecipeSerializer.ALL_RECIPES.getOrDefault(ForgeRegistries.MOB_EFFECTS.getKey(effect), null);
 		if (statusConfig != null)
 			return Math.max(statusConfig.getApplicationDuration(), passedDuration);
 		
@@ -230,7 +231,7 @@ public class EffectBuildup extends SyncedCapability {
 	 */
 	public int getConfiguredAmplifier(MobEffect effect) {
 		//check to see if there is a custom config for this effect in general
-		StatusConfigRecipe statusConfig = StatusConfigRecipeSerializer.ALL_RECIPES.getOrDefault(effect.getRegistryName(), null);
+		StatusConfigRecipe statusConfig = StatusConfigRecipeSerializer.ALL_RECIPES.getOrDefault(ForgeRegistries.MOB_EFFECTS.getKey(effect), null);
 		if (statusConfig != null)
 			return statusConfig.getApplicationMagnitude();
 		
