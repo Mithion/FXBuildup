@@ -29,13 +29,10 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 
-import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.commands.arguments.ResourceArgument;
-import net.minecraft.core.Holder.Reference;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.commands.arguments.MobEffectArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -45,30 +42,30 @@ import net.minecraft.world.entity.LivingEntity;
 public class CommandFXBEffect{
 	private static final SimpleCommandExceptionType ERROR_GIVE_FAILED = new SimpleCommandExceptionType(Component.translatable("commands.effect.give.failed"));
 	
-	 public static void register(CommandDispatcher<CommandSourceStack> pDispatcher, CommandBuildContext p_251610_) {
+	public static void register(CommandDispatcher<CommandSourceStack> pDispatcher) {
 	      pDispatcher.register(Commands.literal("fxbeffect").requires((p_136958_) -> {
 	         return p_136958_.hasPermission(2);
-	      }).then(Commands.literal("give").then(Commands.argument("targets", EntityArgument.entities()).then(Commands.argument("effect", ResourceArgument.resource(p_251610_, Registries.MOB_EFFECT)).executes((p_136978_) -> {
-	         return giveEffect(p_136978_.getSource(), EntityArgument.getEntities(p_136978_, "targets"), ResourceArgument.getMobEffect(p_136978_, "effect"), (Integer)null, 0, true);
+	      }).then(Commands.literal("give").then(Commands.argument("targets", EntityArgument.entities()).then(Commands.argument("effect", MobEffectArgument.m_98426_()).executes((p_136978_) -> {
+	         return giveEffect(p_136978_.getSource(), EntityArgument.getEntities(p_136978_, "targets"), MobEffectArgument.m_98429_(p_136978_, "effect"), (Integer)null, 0, true);
 	      }).then(Commands.argument("seconds", IntegerArgumentType.integer(1, 1000000)).executes((p_136976_) -> {
-	         return giveEffect(p_136976_.getSource(), EntityArgument.getEntities(p_136976_, "targets"), ResourceArgument.getMobEffect(p_136976_, "effect"), IntegerArgumentType.getInteger(p_136976_, "seconds"), 0, true);
+	         return giveEffect(p_136976_.getSource(), EntityArgument.getEntities(p_136976_, "targets"), MobEffectArgument.m_98429_(p_136976_, "effect"), IntegerArgumentType.getInteger(p_136976_, "seconds"), 0, true);
 	      }).then(Commands.argument("amplifier", IntegerArgumentType.integer(0, 255)).executes((p_136974_) -> {
-	         return giveEffect(p_136974_.getSource(), EntityArgument.getEntities(p_136974_, "targets"), ResourceArgument.getMobEffect(p_136974_, "effect"), IntegerArgumentType.getInteger(p_136974_, "seconds"), IntegerArgumentType.getInteger(p_136974_, "amplifier"), true);
+	         return giveEffect(p_136974_.getSource(), EntityArgument.getEntities(p_136974_, "targets"), MobEffectArgument.m_98429_(p_136974_, "effect"), IntegerArgumentType.getInteger(p_136974_, "seconds"), IntegerArgumentType.getInteger(p_136974_, "amplifier"), true);
 	      }).then(Commands.argument("hideParticles", BoolArgumentType.bool()).executes((p_136956_) -> {
-	         return giveEffect(p_136956_.getSource(), EntityArgument.getEntities(p_136956_, "targets"), ResourceArgument.getMobEffect(p_136956_, "effect"), IntegerArgumentType.getInteger(p_136956_, "seconds"), IntegerArgumentType.getInteger(p_136956_, "amplifier"), !BoolArgumentType.getBool(p_136956_, "hideParticles"));
+	         return giveEffect(p_136956_.getSource(), EntityArgument.getEntities(p_136956_, "targets"), MobEffectArgument.m_98429_(p_136956_, "effect"), IntegerArgumentType.getInteger(p_136956_, "seconds"), IntegerArgumentType.getInteger(p_136956_, "amplifier"), !BoolArgumentType.getBool(p_136956_, "hideParticles"));
 	      }))))))));
 	   }
 
-	   private static int giveEffect(CommandSourceStack pSource, Collection<? extends Entity> pTargets, Reference<MobEffect> pEffect, @Nullable Integer pSeconds, int pAmplifier, boolean pShowParticles) throws CommandSyntaxException {
+	   private static int giveEffect(CommandSourceStack pSource, Collection<? extends Entity> pTargets, MobEffect pEffect, @Nullable Integer pSeconds, int pAmplifier, boolean pShowParticles) throws CommandSyntaxException {
 	      int i = 0;
 	      int j;
 	      if (pSeconds != null) {
-	         if (pEffect.get().isInstantenous()) {
+	         if (pEffect.isInstantenous()) {
 	            j = pSeconds;
 	         } else {
 	            j = pSeconds * 20;
 	         }
-	      } else if (pEffect.get().isInstantenous()) {
+	      } else if (pEffect.isInstantenous()) {
 	         j = 1;
 	      } else {
 	         j = 600;
@@ -76,7 +73,7 @@ public class CommandFXBEffect{
 
 	      for(Entity entity : pTargets) {
 	         if (entity instanceof LivingEntity) {
-	            MobEffectInstance mobeffectinstance = new MobEffectInstance(pEffect.get(), j, pAmplifier, false, pShowParticles);
+	            MobEffectInstance mobeffectinstance = new MobEffectInstance(pEffect, j, pAmplifier, false, pShowParticles);
 	            ((LivingEntity)entity).getPersistentData().putBoolean("fxb_force", true);
 	            if (((LivingEntity)entity).addEffect(mobeffectinstance, pSource.getEntity())) {
 	               ++i;
@@ -89,9 +86,9 @@ public class CommandFXBEffect{
 	         throw ERROR_GIVE_FAILED.create();
 	      } else {
 	         if (pTargets.size() == 1) {
-	            pSource.sendSuccess(Component.translatable("commands.effect.give.success.single", pEffect.get().getDisplayName(), pTargets.iterator().next().getDisplayName(), j / 20), true);
+	            pSource.sendSuccess(Component.translatable("commands.effect.give.success.single", pEffect.getDisplayName(), pTargets.iterator().next().getDisplayName(), j / 20), true);
 	         } else {
-	            pSource.sendSuccess(Component.translatable("commands.effect.give.success.multiple", pEffect.get().getDisplayName(), pTargets.size(), j / 20), true);
+	            pSource.sendSuccess(Component.translatable("commands.effect.give.success.multiple", pEffect.getDisplayName(), pTargets.size(), j / 20), true);
 	         }
 
 	         return i;

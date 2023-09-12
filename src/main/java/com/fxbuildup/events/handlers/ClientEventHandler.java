@@ -42,10 +42,10 @@ public class ClientEventHandler {
 		if (mc.player == null)
 			return;		
 		
-		if (EffectBuildupConfig.STAMINA_ENABLED.get()) {
-			double stamCost = EffectBuildupConfig.JUMP_STAMINA_CONSUMPTION.get();
+		if (EffectBuildupConfig.INSTANCE.STAMINA_ENABLED.get()) {
+			double stamCost = EffectBuildupConfig.INSTANCE.JUMP_STAMINA_CONSUMPTION.get();
 			if (mc.player.isSprinting()) {
-				stamCost *= EffectBuildupConfig.JUMP_SPRINT_STAMINA_MULTIPLIER.get();
+				stamCost *= EffectBuildupConfig.INSTANCE.JUMP_SPRINT_STAMINA_MULTIPLIER.get();
 			}
 			
 			if (event.getInput().jumping && Stamina.getAmount(mc.player) < stamCost) {
@@ -54,8 +54,8 @@ public class ClientEventHandler {
 			}
 		}
 		
-		if (EffectBuildupConfig.DODGING_ENABLED.get() && !mc.player.isCrouching()) {
-			double stamCost = EffectBuildupConfig.DODGE_STAMINA_COST.get();			
+		if (EffectBuildupConfig.INSTANCE.DODGING_ENABLED.get() && !mc.player.isCrouching()) {
+			double stamCost = EffectBuildupConfig.INSTANCE.DODGE_STAMINA_COST.get();			
 			
 			if (left.update(event.getInput().left)) {				
 				if (Stamina.getAmount(mc.player) >= stamCost)
@@ -82,9 +82,9 @@ public class ClientEventHandler {
 	
 	@SubscribeEvent
 	public static void onClickInput(InputEvent.InteractionKeyMappingTriggered event) {
-		if (EffectBuildupConfig.STAMINA_ENABLED.get() && EffectBuildupConfig.ATTACK_STAMINA_COST.get() > 0) {
+		if (EffectBuildupConfig.INSTANCE.STAMINA_ENABLED.get() && EffectBuildupConfig.INSTANCE.ATTACK_STAMINA_COST.get() > 0) {
 			Minecraft mc = Minecraft.getInstance();
-			if (event.isAttack() && Stamina.getAmount(mc.player) < EffectBuildupConfig.ATTACK_STAMINA_COST.get()) {
+			if (event.isAttack() && Stamina.getAmount(mc.player) < EffectBuildupConfig.INSTANCE.ATTACK_STAMINA_COST.get()) {
 				Hud.flashStamina();
 				event.setCanceled(true);
 			}

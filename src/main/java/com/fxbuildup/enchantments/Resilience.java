@@ -71,7 +71,7 @@ public class Resilience extends Enchantment{
 		
 		try {
 			if (living.getAttributes().hasAttribute(AttributeInit.RESISTANCE.get()))
-				living.getAttribute(AttributeInit.RESISTANCE.get()).addTransientModifier(new AttributeModifier(ID_ATTRIBUTE, "resilience-resistance", EffectBuildupConfig.ENCHANTMENT_RESISTANCE.get() * level, Operation.ADDITION));
+				living.getAttribute(AttributeInit.RESISTANCE.get()).addTransientModifier(new AttributeModifier(ID_ATTRIBUTE, "resilience-resistance", EffectBuildupConfig.INSTANCE.ENCHANTMENT_RESISTANCE.get() * level, Operation.ADDITION));
 		}catch(Throwable t){
 			FXBuildup.LOGGER.warn("Attempted to apply resilience value to player but it failed:");
 			FXBuildup.LOGGER.warn(t.getLocalizedMessage());

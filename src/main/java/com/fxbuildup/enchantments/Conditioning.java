@@ -62,27 +62,27 @@ public class Conditioning extends Enchantment {
 	
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack) {
-		return EffectBuildupConfig.STAMINA_ENABLED.get();
+		return EffectBuildupConfig.INSTANCE.STAMINA_ENABLED.get();
 	}
 	
 	@Override
 	public boolean isAllowedOnBooks() {
-		return EffectBuildupConfig.STAMINA_ENABLED.get();
+		return EffectBuildupConfig.INSTANCE.STAMINA_ENABLED.get();
 	}
 	
 	@Override
 	public boolean isDiscoverable() {
-		return EffectBuildupConfig.STAMINA_ENABLED.get();
+		return EffectBuildupConfig.INSTANCE.STAMINA_ENABLED.get();
 	}
 	
 	@Override
 	public boolean isTradeable() {
-		return EffectBuildupConfig.STAMINA_ENABLED.get();
+		return EffectBuildupConfig.INSTANCE.STAMINA_ENABLED.get();
 	}
 	
 	@Override
 	public boolean canEnchant(ItemStack pStack) {
-		return EffectBuildupConfig.STAMINA_ENABLED.get();
+		return EffectBuildupConfig.INSTANCE.STAMINA_ENABLED.get();
 	}
 	
 	/**
@@ -91,12 +91,12 @@ public class Conditioning extends Enchantment {
 	 * @param level The level of the enchantment.  Must be greater than 0.
 	 */
 	public static void apply(Player player, int level) {
-		if (!EffectBuildupConfig.STAMINA_ENABLED.get() || player == null || level < 1)
+		if (!EffectBuildupConfig.INSTANCE.STAMINA_ENABLED.get() || player == null || level < 1)
 			return;
 		
 		try {
 			if (player.getAttributes().hasAttribute(AttributeInit.STAMINA_REGEN.get()))
-				player.getAttribute(AttributeInit.STAMINA_REGEN.get()).addTransientModifier(new AttributeModifier(ID_ATTRIBUTE, "conditioning-stamina", EffectBuildupConfig.STAMINA_REGEN_ENCHANT.get() * level, Operation.ADDITION));
+				player.getAttribute(AttributeInit.STAMINA_REGEN.get()).addTransientModifier(new AttributeModifier(ID_ATTRIBUTE, "conditioning-stamina", EffectBuildupConfig.INSTANCE.STAMINA_REGEN_ENCHANT.get() * level, Operation.ADDITION));
 		}catch(Throwable t){
 			FXBuildup.LOGGER.warn("Attempted to apply conditioning value to player but it failed:");
 			FXBuildup.LOGGER.warn(t.getLocalizedMessage());
@@ -108,7 +108,7 @@ public class Conditioning extends Enchantment {
 	 * @param player The player to remove the stat modifier from.
 	 */
 	public static void remove(Player player) {
-		if (!EffectBuildupConfig.STAMINA_ENABLED.get())
+		if (!EffectBuildupConfig.INSTANCE.STAMINA_ENABLED.get())
 			return;
 		
 		try {

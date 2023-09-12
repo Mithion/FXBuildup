@@ -53,7 +53,7 @@ public class FXBuildup
 
     public FXBuildup(){
     	//load configs
-    	ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, EffectBuildupConfig.SERVERCONFIG, "fx-buildup.toml");
+    	ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, EffectBuildupConfig.SERVERCONFIG, "fx-buildup.toml");
     	ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, EffectBuildupClientConfig.CLIENT_SPEC);
     	
     	AttributeInit.ATTRIBUTES.register(modEventBus);

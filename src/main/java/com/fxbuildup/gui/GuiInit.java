@@ -32,8 +32,10 @@ public class GuiInit {
 		Hud.instance = new Hud();		
 	}
 	
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
 	public static void onRegisterOverlays(RegisterGuiOverlaysEvent event) {
-		event.registerAboveAll("FX Buildup Statuses and Stamina", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
+		event.registerAboveAll("fx_buildup_statuses_and_stamina", (gui, mStack, partialTicks, screenWidth, screenHeight) -> {
 			Hud.registerOverlay(gui, mStack, partialTicks, screenWidth, screenHeight);
 		});
 	}

@@ -19,7 +19,6 @@
 package com.fxbuildup.attributes;
 
 import com.fxbuildup.FXBuildup;
-import com.fxbuildup.config.EffectBuildupConfig;
 
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraftforge.registries.DeferredRegister;
@@ -37,15 +36,15 @@ public class AttributeInit {
 	/**
 	 * The general resistance attribute; increasing this will increase the baseline amount that entities have.
 	 */
-	public static RegistryObject<Attribute> RESISTANCE = ATTRIBUTES.register("effect_resistance", () -> new ModAttribute("effect_resistance", EffectBuildupConfig.BASELINE_RESISTANCE.get()));
+	public static RegistryObject<Attribute> RESISTANCE = ATTRIBUTES.register("effect_resistance", () -> new ModAttribute("effect_resistance", 1000));
 	
 	/**
 	 * The general stamina attribute that entities have.
 	 */
-	public static RegistryObject<Attribute> MAX_STAMINA = ATTRIBUTES.register("max_stamina", () -> new ModAttribute("max_stamina", EffectBuildupConfig.STAMINA_BASELINE.get()));
+	public static RegistryObject<Attribute> MAX_STAMINA = ATTRIBUTES.register("max_stamina", () -> new ModAttribute("max_stamina", 100));
 	
 	/**
 	 * The stamina regeneration rate per second that entities have.
 	 */
-	public static RegistryObject<Attribute> STAMINA_REGEN = ATTRIBUTES.register("stamina_regen", () -> new ModAttribute("stamina_regen", EffectBuildupConfig.STAMINA_REGEN_BASELINE.get()));
+	public static RegistryObject<Attribute> STAMINA_REGEN = ATTRIBUTES.register("stamina_regen", () -> new ModAttribute("stamina_regen", 20));
 }

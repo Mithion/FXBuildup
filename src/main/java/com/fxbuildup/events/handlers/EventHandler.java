@@ -60,7 +60,7 @@ public class EventHandler {
 		LivingEntity living = event.getEntity();
 		
 		//handle stamina
-		if (EffectBuildupConfig.STAMINA_ENABLED.get()) {
+		if (EffectBuildupConfig.INSTANCE.STAMINA_ENABLED.get()) {
 			if (living instanceof Player) {
 				Player p = (Player)event.getEntity();				
 				
@@ -69,8 +69,8 @@ public class EventHandler {
 					stamina.tick(p);
 					
 					//perform stamina drain if sprinting
-					if (stamina.isInCombat() && p.isSprinting() && EffectBuildupConfig.SPRINT_STAMINA.get()) {
-						if (!stamina.consumeStamina(p, EffectBuildupConfig.SPRINT_STAMINA_CONSUMPTION.get() / 20f))
+					if (stamina.isInCombat() && p.isSprinting() && EffectBuildupConfig.INSTANCE.SPRINT_STAMINA.get()) {
+						if (!stamina.consumeStamina(p, EffectBuildupConfig.INSTANCE.SPRINT_STAMINA_CONSUMPTION.get() / 20f))
 							p.setSprinting(false);
 					}
 				});			
@@ -81,7 +81,7 @@ public class EventHandler {
 				LivingEntity target = ((Mob)living).getTarget();
 				if (target != null && target instanceof Player && !living.isAlliedTo(target) && ((Mob)living).getSensing().hasLineOfSight(target)) {
 					//distance check
-					if (living.distanceTo(target) <= EffectBuildupConfig.IN_COMBAT_DISTANCE.get()) {
+					if (living.distanceTo(target) <= EffectBuildupConfig.INSTANCE.IN_COMBAT_DISTANCE.get()) {
 						Stamina.setCombatTicks((Player)target);
 					}
 				}
@@ -128,7 +128,7 @@ public class EventHandler {
 	
 	@SubscribeEvent
 	public static void onLivingJump(LivingEvent.LivingJumpEvent event) {
-		if (event.getEntity() instanceof Player && EffectBuildupConfig.JUMP_STAMINA.get()) {
+		if (event.getEntity() instanceof Player && EffectBuildupConfig.INSTANCE.JUMP_STAMINA.get()) {
 			//handle stamina drain if the capability exists
 			Player p = (Player)event.getEntity();			
 			
@@ -137,9 +137,9 @@ public class EventHandler {
 				if (!stamina.isInCombat())
 					return;
 				
-				double stamCost = EffectBuildupConfig.JUMP_STAMINA_CONSUMPTION.get();
+				double stamCost = EffectBuildupConfig.INSTANCE.JUMP_STAMINA_CONSUMPTION.get();
 				if (p.isSprinting()) {
-					stamCost *= EffectBuildupConfig.JUMP_SPRINT_STAMINA_MULTIPLIER.get();
+					stamCost *= EffectBuildupConfig.INSTANCE.JUMP_SPRINT_STAMINA_MULTIPLIER.get();
 				}
 				//this is canceled during client input if not enough stamina
 				stamina.consumeStamina(p, stamCost);			
@@ -150,7 +150,7 @@ public class EventHandler {
 	@SubscribeEvent
 	public static void onPlayerWakeUp(PlayerWakeUpEvent event) {
 		//handle status buildup reset if enabled by config and capability is present
-		if (EffectBuildupConfig.ALLOW_BED_RESET.get()) {
+		if (EffectBuildupConfig.INSTANCE.ALLOW_BED_RESET.get()) {
 			event.getEntity().getCapability(EffectBuildupProvider.CAP).ifPresent(buildup -> {
 				buildup.resetBuildup();
 			});
@@ -159,8 +159,8 @@ public class EventHandler {
 
 	@SubscribeEvent
 	public static void onPlayerAttackTarget(AttackEntityEvent event) {
-		if (EffectBuildupConfig.STAMINA_ENABLED.get() && EffectBuildupConfig.ATTACK_STAMINA_COST.get() > 0) {
-			if (!Stamina.consume(event.getEntity(), EffectBuildupConfig.ATTACK_STAMINA_COST.get(), true)) {
+		if (EffectBuildupConfig.INSTANCE.STAMINA_ENABLED.get() && EffectBuildupConfig.INSTANCE.ATTACK_STAMINA_COST.get() > 0) {
+			if (!Stamina.consume(event.getEntity(), EffectBuildupConfig.INSTANCE.ATTACK_STAMINA_COST.get(), true)) {
 				event.setCanceled(true);
 				event.setResult(Result.DENY);
 			}
@@ -169,11 +169,11 @@ public class EventHandler {
 	
 	@SubscribeEvent
 	public static void onShieldBlock(ShieldBlockEvent event) {
-		if (event.getEntity() instanceof Player && EffectBuildupConfig.STAMINA_ENABLED.get() && EffectBuildupConfig.BLOCK_STAMINA_DRAIN_RATE.get() > 0) {
+		if (event.getEntity() instanceof Player && EffectBuildupConfig.INSTANCE.STAMINA_ENABLED.get() && EffectBuildupConfig.INSTANCE.BLOCK_STAMINA_DRAIN_RATE.get() > 0) {
 			Player p = (Player)event.getEntity();
 			
-			if (!Stamina.consume(p, EffectBuildupConfig.BLOCK_STAMINA_DRAIN_RATE.get(), true)) {
-				p.getCooldowns().addCooldown(p.getUseItem().getItem(), EffectBuildupConfig.BLOCK_STAMINA_SHIELD_COOLDOWN.get());
+			if (!Stamina.consume(p, EffectBuildupConfig.INSTANCE.BLOCK_STAMINA_DRAIN_RATE.get(), true)) {
+				p.getCooldowns().addCooldown(p.getUseItem().getItem(), EffectBuildupConfig.INSTANCE.BLOCK_STAMINA_SHIELD_COOLDOWN.get());
 				p.stopUsingItem();
 				if (!p.level.isClientSide)
 					ServerMessageDispatcher.sendStaminaFlash((ServerPlayer) p);

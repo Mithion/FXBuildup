@@ -74,8 +74,8 @@ public class Stamina extends SyncedCapability{
 		if (attr == null || regen == null)
 			return;
 		
-		double configuredAttrBaseline = EffectBuildupConfig.STAMINA_BASELINE.get();
-		double configuredRegenBaseline = EffectBuildupConfig.STAMINA_REGEN_BASELINE.get();
+		double configuredAttrBaseline = EffectBuildupConfig.INSTANCE.STAMINA_BASELINE.get();
+		double configuredRegenBaseline = EffectBuildupConfig.INSTANCE.STAMINA_REGEN_BASELINE.get();
 		if (attr.getBaseValue() != configuredAttrBaseline) {
 			attr.setBaseValue(configuredAttrBaseline);
 		}
@@ -96,11 +96,11 @@ public class Stamina extends SyncedCapability{
 		
 		double regenRate = regenVal / 20f;		
 		
-		double foodPct = Mth.clamp(player.getFoodData().getFoodLevel() / 20f, EffectBuildupConfig.MINIMUM_FOOD_FACTOR.get(), 1f);
+		double foodPct = Mth.clamp(player.getFoodData().getFoodLevel() / 20f, EffectBuildupConfig.INSTANCE.MINIMUM_FOOD_FACTOR.get(), 1f);
 		regenRate *= foodPct;
 		
 		if (player.isBlocking()) {
-			regenRate *= EffectBuildupConfig.BLOCK_STAMINA_REGEN_MODIFIER.get();
+			regenRate *= EffectBuildupConfig.INSTANCE.BLOCK_STAMINA_REGEN_MODIFIER.get();
 		}			
 		
 		amount += regenRate;
@@ -136,7 +136,7 @@ public class Stamina extends SyncedCapability{
 		}			
 		
 		this.amount -= amount;
-		this.pauseCounter = EffectBuildupConfig.STAMINA_USE_REGEN_PAUSE.get();
+		this.pauseCounter = EffectBuildupConfig.INSTANCE.STAMINA_USE_REGEN_PAUSE.get();
 		setDirty(false);
 		return true;
 	}
@@ -185,7 +185,7 @@ public class Stamina extends SyncedCapability{
 	 * @param ticks The number of ticks to be in combat for
 	 */
 	public static void setCombatTicks(Player player) {
-		setCombatTicks(player, EffectBuildupConfig.IN_COMBAT_TICKS.get());
+		setCombatTicks(player, EffectBuildupConfig.INSTANCE.IN_COMBAT_TICKS.get());
 	}
 	
 	/**

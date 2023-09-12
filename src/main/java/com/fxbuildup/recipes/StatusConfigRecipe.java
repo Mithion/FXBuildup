@@ -24,7 +24,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -47,14 +46,14 @@ public class StatusConfigRecipe extends CustomRecipe{
 	int maximumAmplifier;
 	
 	public StatusConfigRecipe(ResourceLocation pId) {
-		super(pId, CraftingBookCategory.MISC);
+		super(pId);
 		
-		buildupRate = EffectBuildupConfig.APPLICATION_RATE.get();
-		decayRate = EffectBuildupConfig.DECAY_RATE.get();
+		buildupRate = EffectBuildupConfig.INSTANCE.APPLICATION_RATE.get();
+		decayRate = EffectBuildupConfig.INSTANCE.DECAY_RATE.get();
 		
 		applicationMagnitude = 0;
 		applicationDuration = -1;
-		maximumAmplifier = EffectBuildupConfig.MAXIMUM_AMPLIFIER.get();
+		maximumAmplifier = EffectBuildupConfig.INSTANCE.MAXIMUM_AMPLIFIER.get();
 	}
 
 	/**

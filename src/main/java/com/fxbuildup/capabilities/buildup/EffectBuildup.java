@@ -92,10 +92,10 @@ public class EffectBuildup extends SyncedCapability {
 			double buildup_rate = getBuildupRate(inst.getEffect());
 			
 			if (inst.isAmbient())
-				buildup_rate *= EffectBuildupConfig.AMBIENT_BUILDUP_FACTOR.get();
+				buildup_rate *= EffectBuildupConfig.INSTANCE.AMBIENT_BUILDUP_FACTOR.get();
 			
 			if (isLingering)
-				buildup_rate *= EffectBuildupConfig.LINGERING_BUILDUP_FACTOR.get();
+				buildup_rate *= EffectBuildupConfig.INSTANCE.LINGERING_BUILDUP_FACTOR.get();
 			
 			double new_buildup = getBuildup(inst.getEffect()) + ((inst.getAmplifier() + 1) * inst.getDuration() * buildup_rate);
 			
@@ -124,8 +124,8 @@ public class EffectBuildup extends SyncedCapability {
 			int existingAmplifier = existing == null ? -1 : existing.amplifier;
 			int newAmplifier = existingAmplifier + (addedLevels + getConfiguredAmplifier(inst.getEffect()));
 			
-			if (newAmplifier > EffectBuildupConfig.MAXIMUM_AMPLIFIER.get())
-				newAmplifier = EffectBuildupConfig.MAXIMUM_AMPLIFIER.get();
+			if (newAmplifier > EffectBuildupConfig.INSTANCE.MAXIMUM_AMPLIFIER.get())
+				newAmplifier = EffectBuildupConfig.INSTANCE.MAXIMUM_AMPLIFIER.get();
 						
 			return new Pair<>(
 				 newAmplifier,
@@ -162,7 +162,7 @@ public class EffectBuildup extends SyncedCapability {
 		if (attr == null)
 			return 0;
 		
-		double configuredBaseline = EffectBuildupConfig.BASELINE_RESISTANCE.get();
+		double configuredBaseline = EffectBuildupConfig.INSTANCE.BASELINE_RESISTANCE.get();
 		if (attr.getBaseValue() != configuredBaseline)
 			attr.setBaseValue(configuredBaseline);
 		
@@ -191,7 +191,7 @@ public class EffectBuildup extends SyncedCapability {
 		if (statusConfig != null)
 			return statusConfig.getBuildup();
 		
-		return EffectBuildupConfig.APPLICATION_RATE.get();
+		return EffectBuildupConfig.INSTANCE.APPLICATION_RATE.get();
 	}
 	
 	/**
@@ -206,7 +206,7 @@ public class EffectBuildup extends SyncedCapability {
 		if (statusConfig != null)
 			return statusConfig.getDecay() / 20f;
 		
-		return EffectBuildupConfig.DECAY_RATE.get() / 20f;
+		return EffectBuildupConfig.INSTANCE.DECAY_RATE.get() / 20f;
 	}	
 	
 	/**

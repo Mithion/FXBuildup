@@ -58,13 +58,13 @@ public class Dodge{
 		if (!player.isOnGround() && !player.isInWaterOrBubble())
 			return;
 		
-		double stamCost = EffectBuildupConfig.DODGE_STAMINA_COST.get();
+		double stamCost = EffectBuildupConfig.INSTANCE.DODGE_STAMINA_COST.get();
 		if (!Stamina.consume(player, stamCost, true))
 			return;
 		
 		Vec3 forward = Vec3.directionFromRotation(0, player.getYHeadRot());
 		Vec3 dodgeDelta;
-		double strength = EffectBuildupConfig.DODGE_STRENGTH.get();
+		double strength = EffectBuildupConfig.INSTANCE.DODGE_STRENGTH.get();
 		
 		if (direction == Direction.BACK) {
 			dodgeDelta = forward.normalize().scale(-strength);			

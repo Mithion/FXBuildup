@@ -19,8 +19,6 @@
 
 package com.fxbuildup.gui;
 
-import org.joml.Matrix4f;
-
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -28,6 +26,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Matrix4f;
 
 /**
  * Helpful gui renderers
@@ -51,11 +50,11 @@ public class GuiHelper {
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-		Matrix4f mat = poseStack.last().pose();
-		bufferbuilder.vertex(mat, right, top, 0).color(f1, f2, f3, f).endVertex();
-		bufferbuilder.vertex(mat, left, top, 0).color(f1, f2, f3, f).endVertex();
-		bufferbuilder.vertex(mat, left, bottom, 0).color(f5, f6, f7, f4).endVertex();
-		bufferbuilder.vertex(mat, right, bottom, 0).color(f5, f6, f7, f4).endVertex();
+		Matrix4f mat = poseStack.last().m_85861_();
+		bufferbuilder.m_85982_(mat, right, top, 0).color(f1, f2, f3, f).endVertex();
+		bufferbuilder.m_85982_(mat, left, top, 0).color(f1, f2, f3, f).endVertex();
+		bufferbuilder.m_85982_(mat, left, bottom, 0).color(f5, f6, f7, f4).endVertex();
+		bufferbuilder.m_85982_(mat, right, bottom, 0).color(f5, f6, f7, f4).endVertex();
 		tessellator.end();
 		
 		RenderSystem.disableBlend();

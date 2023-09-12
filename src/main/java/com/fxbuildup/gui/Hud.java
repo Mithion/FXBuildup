@@ -84,7 +84,7 @@ public class Hud extends GuiComponent {
 	        
 	        Minecraft mc = Minecraft.getInstance();
 	        
-	        if (EffectBuildupConfig.STAMINA_ENABLED.get() && !mc.player.isCreative() && !mc.player.isSpectator()) {
+	        if (EffectBuildupConfig.INSTANCE.STAMINA_ENABLED.get() && !mc.player.isCreative() && !mc.player.isSpectator()) {
 	        	mc.player.getCapability(StaminaProvider.CAP).ifPresent(stamina -> {
 	        		instance.renderStamina(mStack, screenWidth, screenHeight, partialTicks, stamina.getAmount(), mc.player.getAttributeValue(AttributeInit.MAX_STAMINA.get()), stamina.isInCombat());
 	        	});
@@ -209,7 +209,7 @@ public class Hud extends GuiComponent {
 		Minecraft mc = Minecraft.getInstance();
 		renderer.renderGuiIcon(dummyInstance, mc.gui, matrixStack, x, y, this.getBlitOffset(), 1.0f);
 		
-		RenderSystem.setShaderTexture(0, textureatlassprite.atlasLocation());
+		RenderSystem.setShaderTexture(0, textureatlassprite.m_118414_().location());
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0f);
         blit(matrixStack, x + 3, y + 3, this.getBlitOffset(), 18, 18, textureatlassprite);
 	}

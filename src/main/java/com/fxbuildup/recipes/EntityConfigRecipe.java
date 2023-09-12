@@ -30,7 +30,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -51,7 +50,7 @@ public class EntityConfigRecipe extends CustomRecipe{
 	NonNullList<EffectWhitelist> individualEffects;
 	
 	public EntityConfigRecipe(ResourceLocation pId) {
-		super(pId, CraftingBookCategory.MISC);
+		super(pId);
 		
 		globalOptions = new EffectWhitelist();
 		immuneEffects = NonNullList.create();
@@ -168,8 +167,8 @@ public class EntityConfigRecipe extends CustomRecipe{
 		int duration;
 		
 		private EffectWhitelist() {
-			this.resistance = EffectBuildupConfig.BASELINE_RESISTANCE.get();
-			this.maximumMagnitude = EffectBuildupConfig.MAXIMUM_AMPLIFIER.get();
+			this.resistance = EffectBuildupConfig.INSTANCE.BASELINE_RESISTANCE.get();
+			this.maximumMagnitude = EffectBuildupConfig.INSTANCE.MAXIMUM_AMPLIFIER.get();
 			this.duration = -1;
 		}
 		

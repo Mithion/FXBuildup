@@ -43,21 +43,21 @@ public class CapabilityForgeEventHandlers {
 	@SubscribeEvent
 	public static void attachEntityCapability(AttachCapabilitiesEvent<Entity> event) {
 		//player only caps (stamina)
-		if (EffectBuildupConfig.STAMINA_ENABLED.get() && event.getObject() instanceof Player)
+		if (EffectBuildupConfig.INSTANCE.STAMINA_ENABLED.get() && event.getObject() instanceof Player)
 			event.addCapability(STAMINA_CAP, new StaminaProvider());
 		
 		//buildup
 		if (event.getObject() instanceof LivingEntity) {
 			//is player
-			if (event.getObject() instanceof Player && EffectBuildupConfig.PLAYER_BUILDUP.get())
+			if (event.getObject() instanceof Player && EffectBuildupConfig.INSTANCE.PLAYER_BUILDUP.get())
 				event.addCapability(BUILDUP_CAP, new EffectBuildupProvider());			
 			
 			//is boss
-			else if (!((LivingEntity)event.getObject()).canChangeDimensions() && EffectBuildupConfig.BOSS_BUILDUP.get())
+			else if (!((LivingEntity)event.getObject()).canChangeDimensions() && EffectBuildupConfig.INSTANCE.BOSS_BUILDUP.get())
 				event.addCapability(BUILDUP_CAP, new EffectBuildupProvider());
 			
 			//is mob
-			else if (event.getObject() instanceof Mob && EffectBuildupConfig.MOB_BUILDUP.get())
+			else if (event.getObject() instanceof Mob && EffectBuildupConfig.INSTANCE.MOB_BUILDUP.get())
 				event.addCapability(BUILDUP_CAP, new EffectBuildupProvider());
 		}
 	}
