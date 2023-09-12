@@ -18,7 +18,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
-version = '0.61'
+version = '0.71'
 group = 'com.mithion.fxbuildup' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'fxbuildup'
 
@@ -113,9 +113,9 @@ jar {
         attributes([
                 "Specification-Title"     : "Effects Buildup",
                 "Specification-Vendor"    : "Mithion",
-                "Specification-Version"   : "0.6", // We are version 1 of ourselves
+                "Specification-Version"   : "1", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
-                "Implementation-Version"  : "0.6",
+                "Implementation-Version"  : "1",
                 "Implementation-Vendor"   : "Mithion",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
