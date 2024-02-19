@@ -25,11 +25,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -50,7 +52,7 @@ public class EntityConfigRecipe extends CustomRecipe{
 	NonNullList<EffectWhitelist> individualEffects;
 	
 	public EntityConfigRecipe(ResourceLocation pId) {
-		super(pId);
+		super(pId, CraftingBookCategory.MISC);
 		
 		globalOptions = new EffectWhitelist();
 		immuneEffects = NonNullList.create();
@@ -136,11 +138,6 @@ public class EntityConfigRecipe extends CustomRecipe{
 	}
 
 	@Override
-	public ItemStack assemble(CraftingContainer pContainer) {
-		return null;
-	}
-
-	@Override
 	public boolean canCraftInDimensions(int pWidth, int pHeight) {
 		return false;
 	}
@@ -152,7 +149,7 @@ public class EntityConfigRecipe extends CustomRecipe{
 	
 	@Override
 	public RecipeType<?> getType() {
-		return RecipeInit.ENTITY_CONFIG_TYPE;
+		return RecipeInit.ENTITY_CONFIG_TYPE.get();
 	}
 	
 	/**
@@ -237,5 +234,11 @@ public class EntityConfigRecipe extends CustomRecipe{
 			if (json.has("maximumMagnitude"))
 				this.maximumMagnitude = json.get("maximumMagnitude").getAsInt();
 		}
+	}
+
+	
+	@Override
+	public ItemStack assemble(CraftingContainer pContainer, RegistryAccess pRegistryAccess) {
+		return ItemStack.EMPTY;
 	}
 }

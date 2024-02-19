@@ -28,11 +28,10 @@ import com.fxbuildup.capabilities.buildup.EffectBuildupProvider;
 import com.fxbuildup.capabilities.stamina.StaminaProvider;
 import com.fxbuildup.config.EffectBuildupConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.MobEffectTextureManager;
@@ -49,7 +48,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @EventBusSubscriber(Dist.CLIENT)
-public class Hud extends GuiComponent {
+public class Hud {
 	
 	//gui code is rough to begin with.  Let's avoid "magic numbers", and declare as much as we can up here.
 	private static final int TOAST_FADE_IN_TIME = 10;
@@ -79,23 +78,23 @@ public class Hud extends GuiComponent {
 	/**
 	 * Register our main overlay with forge.
 	 */	
-	public static void registerOverlay(ForgeGui gui, PoseStack mStack, float partialTicks, int screenWidth, int screenHeight) {
+	public static void registerOverlay(ForgeGui gui, GuiGraphics pGuiGraphics, float partialTicks, int screenWidth, int screenHeight) {
 		 gui.setupOverlayRenderState(true, false);
 	        
 	        Minecraft mc = Minecraft.getInstance();
 	        
 	        if (EffectBuildupConfig.INSTANCE.STAMINA_ENABLED.get() && !mc.player.isCreative() && !mc.player.isSpectator()) {
 	        	mc.player.getCapability(StaminaProvider.CAP).ifPresent(stamina -> {
-	        		instance.renderStamina(mStack, screenWidth, screenHeight, partialTicks, stamina.getAmount(), mc.player.getAttributeValue(AttributeInit.MAX_STAMINA.get()), stamina.isInCombat());
+	        		instance.renderStamina(pGuiGraphics, screenWidth, screenHeight, partialTicks, stamina.getAmount(), mc.player.getAttributeValue(AttributeInit.MAX_STAMINA.get()), stamina.isInCombat());
 	        	});
 	        	
 	        }
 	        
 	        mc.player.getCapability(EffectBuildupProvider.CAP).ifPresent(buildup -> {
-	        	instance.renderBuildup(mStack, buildup, mc.font, screenWidth, screenHeight, partialTicks);
+	        	instance.renderBuildup(pGuiGraphics, buildup, mc.font, screenWidth, screenHeight, partialTicks);
 	        });
 	        	        
-	        instance.renderToast(mStack, mc.font, screenWidth, screenHeight, partialTicks);
+	        instance.renderToast(pGuiGraphics, mc.font, screenWidth, screenHeight, partialTicks);
 	}
 	
 	/**
@@ -113,7 +112,7 @@ public class Hud extends GuiComponent {
 		instance.fadeOutCounter = TOAST_FADE_OUT_TIME;
 	}
 	
-	private void renderBuildup(PoseStack matrixStack, EffectBuildup buildup, Font fr, int screenWidth, int screenHeight, float partialTicks) {
+	private void renderBuildup(GuiGraphics pGuiGraphics, EffectBuildup buildup, Font fr, int screenWidth, int screenHeight, float partialTicks) {
 		
 		//no effects, don't need to do anything
 		if (buildup.list().size() == 0)
@@ -132,14 +131,14 @@ public class Hud extends GuiComponent {
 				double resistance = buildup.getResistanceTo(mc.player, eff);
 				double fillPct = Mth.clamp(e.getValue() / resistance, 0, 1);
 				
-				renderEffectIcon(matrixStack, xCoord, yCoord - EFFECT_ICON_SIZE / 2 + EFFECT_BADGE_PADDING, screenWidth, screenHeight, eff);
-				renderEffectBar(matrixStack, xCoord + EFFECT_ICON_SIZE + 7, yCoord + 2, EFFECT_BAR_WIDTH, EFFECT_BAR_HEIGHT, fillPct, eff.getColor(), false);
+				renderEffectIcon(pGuiGraphics, xCoord, yCoord - EFFECT_ICON_SIZE / 2 + EFFECT_BADGE_PADDING, screenWidth, screenHeight, eff);
+				renderEffectBar(pGuiGraphics, xCoord + EFFECT_ICON_SIZE + 7, yCoord + 2, EFFECT_BAR_WIDTH, EFFECT_BAR_HEIGHT, fillPct, eff.getColor(), false);
 				yCoord += EFFECT_ICON_SIZE + EFFECT_BADGE_PADDING;
 			}
 		}
 	}
 	
-	private void renderStamina(PoseStack matrixStack, int screenWidth, int screenHeight, float partialTicks, double stamina, double maxStamina, boolean isInCombat) {
+	private void renderStamina(GuiGraphics pGuiGraphics, int screenWidth, int screenHeight, float partialTicks, double stamina, double maxStamina, boolean isInCombat) {
 		int x = screenWidth / 2 + 10;
 		int y = screenHeight - 47;
 		
@@ -153,15 +152,14 @@ public class Hud extends GuiComponent {
 			color = Mth.hsvToRgb((float)hue, 1.0F, 0.8F) | 0xFF000000;
 		}
 		
-		renderEffectBar(matrixStack, x, y, 80, 5, stamina / maxStamina, color, true);
+		renderEffectBar(pGuiGraphics, x, y, 80, 5, stamina / maxStamina, color, true);
 		
 		if (isInCombat) {
-			RenderSystem.setShaderTexture(0, GuiTextures.IN_COBMAT);
-			blit(matrixStack, x + 74, y - 3, 12, 12, 0, 0, 16, 16, 16, 16);
+			pGuiGraphics.blit(GuiTextures.IN_COBMAT, x + 74, y - 3, 12, 12, 0, 0, 16, 16, 16, 16);
 		}
 	}
 	
-	private void renderToast(PoseStack matrixStack, Font font, int screenWidth, int screenHeight, float partialTicks) {
+	private void renderToast(GuiGraphics pGuiGraphics, Font font, int screenWidth, int screenHeight, float partialTicks) {
 		if (toastComponent == null || fadeOutCounter == 0) //toast is cleared
 			return;
 		
@@ -184,13 +182,13 @@ public class Hud extends GuiComponent {
 		
 		float textScale = 1.75f;
 		
-		matrixStack.pushPose();
-		matrixStack.scale(textScale, textScale, textScale);
-		drawCenteredString(matrixStack, font, toastComponent, (int)(x / textScale), (int)(y / textScale), color);
-		matrixStack.popPose();
+		pGuiGraphics.pose().pushPose();
+		pGuiGraphics.pose().scale(textScale, textScale, textScale);
+		pGuiGraphics.drawCenteredString(font, toastComponent, (int)(x / textScale), (int)(y / textScale), color);
+		pGuiGraphics.pose().popPose();
 	}
 	
-	private void renderEffectIcon(PoseStack matrixStack, int x, int y, int width, int height, MobEffect effect) {
+	private void renderEffectIcon(GuiGraphics pGuiGraphics, int x, int y, int width, int height, MobEffect effect) {
 		MobEffectInstance dummyInstance = new MobEffectInstance(effect);
 		
 		MobEffectTextureManager mobeffecttexturemanager = Minecraft.getInstance().getMobEffectTextures();
@@ -198,45 +196,39 @@ public class Hud extends GuiComponent {
 		 var renderer = net.minecraftforge.client.extensions.common.IClientMobEffectExtensions.of(dummyInstance);
          if (!renderer.isVisibleInGui(dummyInstance)) return;
 		
-		RenderSystem.enableBlend();
-		RenderSystem.setShaderTexture(0, AbstractContainerScreen.INVENTORY_LOCATION);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.enableBlend();		
 		
 		//frame
-		this.blit(matrixStack, x, y, 141, 166, 24, 24);
+		pGuiGraphics.blit(AbstractContainerScreen.INVENTORY_LOCATION, x, y, 141, 166, 24, 24, 256, 256);
 		
-		TextureAtlasSprite textureatlassprite = mobeffecttexturemanager.get(effect);
-		Minecraft mc = Minecraft.getInstance();
-		renderer.renderGuiIcon(dummyInstance, mc.gui, matrixStack, x, y, this.getBlitOffset(), 1.0f);
-		
-		RenderSystem.setShaderTexture(0, textureatlassprite.m_118414_().location());
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0f);
-        blit(matrixStack, x + 3, y + 3, this.getBlitOffset(), 18, 18, textureatlassprite);
+		TextureAtlasSprite textureatlassprite = mobeffecttexturemanager.get(effect);		
+		pGuiGraphics.blit(x + 3, y + 3, 0, 18, 18, textureatlassprite);
 	}
 	
-	private void renderEffectBar(PoseStack stack, int x, int y, int width, int height, double fill, int color, boolean reverseFill) {
+	private void renderEffectBar(GuiGraphics pGuiGraphics, int x, int y, int width, int height, double fill, int color, boolean reverseFill) {
+		int z = 0;
 		//border
-		GuiComponent.fill(stack, x - 1, y - 1, x + width + 1, y + height + 1, 0xFF000000);
+		pGuiGraphics.fill(x - 1, y - 1, x + width + 1, y + height + 1, z, 0xFF000000);
 		
 		//background
-		GuiHelper.drawGradientRect(stack, x, y, x + width, y + height, 0xFF333333, 0xFF111111);		
+		pGuiGraphics.fillGradient(x, y, x + width, y + height, z, 0xFF333333, 0xFF111111);		
 		
 		//fill
 		int fillWidth = (int)(width * fill);
 		int color2 = new Color(color).darker().getRGB();
 		if (reverseFill)
-			GuiHelper.drawGradientRect(stack, x + width - fillWidth, y, x + width, y + height, color2, color);
+			pGuiGraphics.fillGradient(x + width - fillWidth, y, x + width, y + height, z, color2, color);
 		else
-			GuiHelper.drawGradientRect(stack, x, y, x + fillWidth, y + height, color2, color);
+			pGuiGraphics.fillGradient(x, y, x + fillWidth, y + height, z, color2, color);
 		
 		//ticks
 		int firstTick = (int)(width * 0.25f);
 		int secondTick = (int)(width * 0.5f);
 		int thirdTick = (int)(width * 0.75f);
 		
-		GuiComponent.fill(stack, x + firstTick - 1, y + height - 2, x + firstTick + 1, y + height, 0xFF000000);
-		GuiComponent.fill(stack, x + secondTick - 1, y + height - 2, x + secondTick + 1, y + height, 0xFF000000);
-		GuiComponent.fill(stack, x + thirdTick - 1, y + height - 2, x + thirdTick + 1, y + height, 0xFF000000);
+		pGuiGraphics.fill(x + firstTick - 1, y + height - 2, x + firstTick + 1, y + height, z, 0xFF000000);
+		pGuiGraphics.fill(x + secondTick - 1, y + height - 2, x + secondTick + 1, y + height, z, 0xFF000000);
+		pGuiGraphics.fill(x + thirdTick - 1, y + height - 2, x + thirdTick + 1, y + height, z, 0xFF000000);
 	}
 
 	/*

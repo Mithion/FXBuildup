@@ -55,7 +55,7 @@ public class Stamina extends SyncedCapability{
 			inCombatTicks--;
 			//just left combat; sync
 			// also more frequent syncs when in combat
-			if (!player.level.isClientSide && (inCombatTicks == 0 || tickCount++ % 20 == 0)) {
+			if (!player.level().isClientSide() && (inCombatTicks == 0 || tickCount++ % 20 == 0)) {
 				setDirty(true);
 			}
 		}else {
@@ -234,7 +234,7 @@ public class Stamina extends SyncedCapability{
 	
 	@Override
 	protected void dispatchPacket(Player player) {
-		if (player.level.isClientSide)
+		if (player.level().isClientSide())
 			return;
 		
 		//only send packets serverside

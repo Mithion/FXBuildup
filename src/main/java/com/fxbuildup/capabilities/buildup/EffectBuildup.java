@@ -79,7 +79,7 @@ public class EffectBuildup extends SyncedCapability {
 	 * @return The amount of instance levels that should be added, and the duration the effect should be
 	 */
 	public Pair<Integer, Integer> addBuildup(LivingEntity target, boolean isLingering, MobEffectInstance inst) {
-		if (!target.level.isClientSide && TagManager.isEffectBuildup(inst.getEffect())) {
+		if (!target.level().isClientSide() && TagManager.isEffectBuildup(inst.getEffect())) {
 			
 			if (target.isInWaterOrBubble() && TagManager.isEffectInstantInWater(inst.getEffect()))
 				return new Pair<>(inst.getAmplifier(), inst.getDuration());
@@ -240,7 +240,7 @@ public class EffectBuildup extends SyncedCapability {
 
 	@Override
 	protected void dispatchPacket(Player player) {
-		if (!player.level.isClientSide) {
+		if (!player.level().isClientSide()) {
 			//only send the packet server -> client
 			ServerMessageDispatcher.sendBuildupMessage((ServerPlayer)player);
 		}

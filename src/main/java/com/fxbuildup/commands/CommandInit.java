@@ -31,6 +31,6 @@ public class CommandInit {
 
 	@SubscribeEvent	
     public static void onCommandsRegister(RegisterCommandsEvent event) {		
-    	CommandFXBEffect.register(event.getDispatcher());
+    	CommandFXBEffect.register(event.getDispatcher(), event.getBuildContext());
     }
 }

@@ -1,5 +1,5 @@
 {
-	"type": "fxbuildup:status_config",
+	"type": "status_config",
 	"effectId": "minecraft:levitation",
 	"buildupRate": 2
 }

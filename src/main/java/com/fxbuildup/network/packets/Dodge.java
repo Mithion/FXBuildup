@@ -55,7 +55,7 @@ public class Dodge{
 	}
 	
 	public void handle(ServerPlayer player) {		
-		if (!player.isOnGround() && !player.isInWaterOrBubble())
+		if (!player.onGround() && !player.isInWaterOrBubble())
 			return;
 		
 		double stamCost = EffectBuildupConfig.INSTANCE.DODGE_STAMINA_COST.get();

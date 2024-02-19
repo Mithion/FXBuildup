@@ -23,10 +23,8 @@ import com.fxbuildup.FXBuildup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -34,42 +32,22 @@ import net.minecraftforge.registries.RegistryObject;
 @Mod.EventBusSubscriber(modid=FXBuildup.MODID, bus=Bus.MOD)
 public class RecipeInit {
 	public static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, FXBuildup.MODID);
+	public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, FXBuildup.MODID);
 	
 	public static final RegistryObject<StatusConfigRecipeSerializer> STATUS_CONFIG_SERIALIZER = SERIALIZERS.register("status_config", StatusConfigRecipeSerializer::new);
 	public static final RegistryObject<EntityConfigRecipeSerializer> ENTITY_CONFIG_SERIALIZER = SERIALIZERS.register("entity_config", EntityConfigRecipeSerializer::new);
 	
-	public static RecipeType<StatusConfigRecipe> STATUS_CONFIG_TYPE;
-	public static RecipeType<EntityConfigRecipe> ENTITY_CONFIG_TYPE;
-	
-	@SubscribeEvent
-	public static void setup(final FMLCommonSetupEvent event) {
-		event.enqueueWork(
-			() -> {
-				initRecipeTypes();
-				FXBuildup.LOGGER.info("FX Buildup -> Recipe Types Registered");
-			}
-		);
-	}
-	
-	private static void initRecipeTypes() {
-		ResourceLocation status = new ResourceLocation(FXBuildup.MODID, "ritual-type");
-		ResourceLocation entity = new ResourceLocation(FXBuildup.MODID, "ritual-type");
-		
-		STATUS_CONFIG_TYPE =new RecipeType<StatusConfigRecipe>() {
+	public static RegistryObject<RecipeType<StatusConfigRecipe>> STATUS_CONFIG_TYPE = RECIPE_TYPES.register("status-type", () -> new RecipeType<StatusConfigRecipe>() {
 			@Override
 			public String toString() {
-				return status.toString();
+				return new ResourceLocation(FXBuildup.MODID, "status-type").toString();
 			}
-		}; 						
-		
-		ENTITY_CONFIG_TYPE =new RecipeType<EntityConfigRecipe>() {
-			@Override
-			public String toString() {
-				return entity.toString();
-			}
-		}; 
-				
-		ForgeRegistries.RECIPE_TYPES.register(status, STATUS_CONFIG_TYPE);
-		ForgeRegistries.RECIPE_TYPES.register(entity, ENTITY_CONFIG_TYPE);
-	}
+		});
+	
+	public static RegistryObject<RecipeType<EntityConfigRecipe>> ENTITY_CONFIG_TYPE = RECIPE_TYPES.register("entity-type", () -> new RecipeType<EntityConfigRecipe>() {
+		@Override
+		public String toString() {
+			return new ResourceLocation(FXBuildup.MODID, "entity-type").toString();
+		}
+	});
 }

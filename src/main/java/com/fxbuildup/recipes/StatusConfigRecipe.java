@@ -20,10 +20,12 @@ package com.fxbuildup.recipes;
 
 import com.fxbuildup.config.EffectBuildupConfig;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -46,7 +48,7 @@ public class StatusConfigRecipe extends CustomRecipe{
 	int maximumAmplifier;
 	
 	public StatusConfigRecipe(ResourceLocation pId) {
-		super(pId);
+		super(pId, CraftingBookCategory.MISC);
 		
 		buildupRate = EffectBuildupConfig.INSTANCE.APPLICATION_RATE.get();
 		decayRate = EffectBuildupConfig.INSTANCE.DECAY_RATE.get();
@@ -102,10 +104,10 @@ public class StatusConfigRecipe extends CustomRecipe{
 	public boolean matches(CraftingContainer pContainer, Level pLevel) {
 		return false;
 	}
-
+	
 	@Override
-	public ItemStack assemble(CraftingContainer pContainer) {
-		return null;
+	public ItemStack assemble(CraftingContainer pContainer, RegistryAccess pRegistryAccess) {
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -120,6 +122,6 @@ public class StatusConfigRecipe extends CustomRecipe{
 	
 	@Override
 	public RecipeType<?> getType() {
-		return RecipeInit.STATUS_CONFIG_TYPE;
+		return RecipeInit.STATUS_CONFIG_TYPE.get();
 	}
 }

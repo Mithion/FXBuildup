@@ -105,7 +105,7 @@ public class EventHandler {
 			
 			//this is needed because this event is the one that can be "canceled", but it doesn't have the 
 			//source entity parameter included.  So, look for one nearby and if we find one that would apply this effect, and we're in the radius of it, assume it's the source. 
-			Optional<AreaEffectCloud> likelyCloud = event.getEntity().getLevel().getEntities(event.getEntity(), event.getEntity().getBoundingBox().inflate(32), p -> {
+			Optional<AreaEffectCloud> likelyCloud = event.getEntity().level().getEntities(event.getEntity(), event.getEntity().getBoundingBox().inflate(32), p -> {
 				return 
 						p instanceof AreaEffectCloud && 
 						((AreaEffectCloud)p).effects.stream().anyMatch(eff -> eff.equals(event.getEffectInstance()))
@@ -175,7 +175,7 @@ public class EventHandler {
 			if (!Stamina.consume(p, EffectBuildupConfig.INSTANCE.BLOCK_STAMINA_DRAIN_RATE.get(), true)) {
 				p.getCooldowns().addCooldown(p.getUseItem().getItem(), EffectBuildupConfig.INSTANCE.BLOCK_STAMINA_SHIELD_COOLDOWN.get());
 				p.stopUsingItem();
-				if (!p.level.isClientSide)
+				if (!p.level().isClientSide())
 					ServerMessageDispatcher.sendStaminaFlash((ServerPlayer) p);
 			}
 		}

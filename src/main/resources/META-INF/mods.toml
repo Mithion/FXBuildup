@@ -1,10 +1,10 @@
 modLoader="javafml"
-loaderVersion="[40,)"
+loaderVersion="[43,)"
 license="All rights reserved"
 #issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/"
 [[mods]]
 modId="fxbuildup"
-version="0.71"
+version="0.81"
 displayName="FXBuildup"
 credits="Thanks to FromSoft for the inspiration."
 authors="Mithion"
@@ -16,13 +16,13 @@ It also adds dodging and stamina.
 [[dependencies.fxbuildup]]
     modId="forge"
     mandatory=true
-    versionRange="[41,)"
+    versionRange="[47.1.64,)"
     ordering="NONE"
     side="BOTH"
 	
 [[dependencies.fxbuildup]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.2]"
+    versionRange="[1.20.1]"
     ordering="NONE"
     side="BOTH"

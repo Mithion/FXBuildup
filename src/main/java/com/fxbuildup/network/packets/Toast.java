@@ -44,7 +44,7 @@ public class Toast {
 	}
 	
 	public void handle(Player player) {		
-		if (!player.level.isClientSide)
+		if (!player.level().isClientSide())
 			return;
 		
 		Hud.showApplicationToast(effect, isNew);

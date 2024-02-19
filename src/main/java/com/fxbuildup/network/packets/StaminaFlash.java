@@ -37,7 +37,7 @@ public class StaminaFlash {
 	}
 	
 	public void handle(Player player) {
-		if (!player.level.isClientSide)
+		if (!player.level().isClientSide())
 			return;
 		
 		Hud.flashStamina();
